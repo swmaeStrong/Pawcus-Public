@@ -1,21 +1,14 @@
-name: Build and Release Pawcus
+name: Build and Release
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 0.7.4)'
+        description: 'Release version (e.g., 1.0.0)'
         required: true
-        type: string
-      source_repo:
-        description: 'Source repository (owner/repo)'
-        required: true
-        default: 'swmaeStrong/Pawcus'
-        type: string
-      source_ref:
-        description: 'Source branch/tag/commit'
-        required: true
-        default: 'main'
         type: string
 
 jobs:
@@ -23,62 +16,118 @@ jobs:
     runs-on: macos-latest
     
     steps:
-    - name: Checkout source code
+    - name: Checkout code
       uses: actions/checkout@v4
+    
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
       with:
-        repository: ${{ inputs.source_repo }}
-        ref: ${{ inputs.source_ref }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        path: source
+        xcode-version: 'latest'
     
-    - name: Setup Xcode
-      run: |
-        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-        xcodebuild -version
-    
-    - name: Import Code Signing Certificate
+    - name: Install Developer ID certificate
       env:
-        CERTIFICATE_BASE64: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT }}
-        CERTIFICATE_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_PASSWORD }}
+        DEVELOPER_ID_APPLICATION_CERT: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT }}
+        DEVELOPER_ID_APPLICATION_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_PASSWORD }}
         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
       run: |
-        # Create temporary keychain
+        # Create keychain
         security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
         security default-keychain -s build.keychain
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+        security set-keychain-settings -t 3600 -u build.keychain
         
         # Import certificate
-        echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
-        security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+        echo "$DEVELOPER_ID_APPLICATION_CERT" | base64 --decode > certificate.p12
+        security import certificate.p12 -k build.keychain -P "$DEVELOPER_ID_APPLICATION_PASSWORD" -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
         
         # Clean up
         rm certificate.p12
     
-    - name: Build Pawcus
-      env:
-        TEAM_ID: ${{ secrets.TEAM_ID }}
-        DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+    - name: Create Config.xcconfig
       run: |
-        cd source
+        mkdir -p Pawcus/Pawcus/Data/Config
+        cat > Pawcus/Pawcus/Data/Config/Config.xcconfig << EOF
+        //
+        //  Config.xcconfig
+        //  Pawcus
+        //
+        //  Auto-generated during CI/CD
+        //
+
+        // Configuration settings file format documentation can be found at:
+        // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+        BASE_DOMAIN = ${{ secrets.BASE_DOMAIN }}
+        SUPABASE_KEY = ${{ secrets.SUPABASE_KEY }}
+        SUPABASE_DOMAIN = ${{ secrets.SUPABASE_DOMAIN }}
+        EOF
+      
+    - name: Setup version and build number
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+        else
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
         
-        # Ensure we're using the right Xcode
-        export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
-        xcodebuild -version
+        # Calculate build number: remove dots and convert to integer
+        # e.g., 0.6.2 -> 62, 1.0.0 -> 100
+        BUILD_NUMBER=$(echo "$VERSION" | sed 's/\.//g' | sed 's/^0*//')
+        if [ -z "$BUILD_NUMBER" ]; then
+          BUILD_NUMBER=1
+        fi
+        echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION, Build Number: $BUILD_NUMBER"
+    
+    - name: Update build numbers
+      run: |
+        BUILD_NUM="${{ steps.version.outputs.build_number }}"
         
-        # Build the app
+        # Update CFBundleVersion in Info.plist
+        sed -i.bak '/CFBundleVersion/{n;s|<string>[^<]*</string>|<string>'$BUILD_NUM'</string>|;}' Pawcus/Pawcus-Info.plist
+        echo "Updated Info.plist CFBundleVersion to $BUILD_NUM"
+        
+        # Update CURRENT_PROJECT_VERSION in project.pbxproj
+        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' Pawcus/Pawcus.xcodeproj/project.pbxproj
+        echo "Updated project.pbxproj CURRENT_PROJECT_VERSION to $BUILD_NUM"
+        
+        # Update MARKETING_VERSION in project.pbxproj
+        VERSION="${{ steps.version.outputs.version }}"
+        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' Pawcus/Pawcus.xcodeproj/project.pbxproj
+        echo "Updated project.pbxproj MARKETING_VERSION to $VERSION"
+        
+        # Verify changes
+        echo "=== Info.plist CFBundleVersion ==="
+        grep -A 1 "CFBundleVersion" Pawcus/Pawcus-Info.plist
+        echo "=== project.pbxproj CURRENT_PROJECT_VERSION ==="
+        grep "CURRENT_PROJECT_VERSION" Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
+        echo "=== project.pbxproj MARKETING_VERSION ==="
+        grep "MARKETING_VERSION" Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
+    
+    - name: Build app
+      run: |
         xcodebuild -project Pawcus/Pawcus.xcodeproj \
-          -scheme Pawcus \
-          -configuration Release \
-          -derivedDataPath build \
-          -archivePath build/Pawcus.xcarchive \
-          archive \
-          CODE_SIGN_IDENTITY="Developer ID Application" \
-          DEVELOPMENT_TEAM="$TEAM_ID" \
-          CODE_SIGN_STYLE=Manual
-        
-        # Export the app
-        cat > ExportOptions.plist << EOF
+                   -scheme Pawcus \
+                   -configuration Release \
+                   -destination "generic/platform=macOS" \
+                   -derivedDataPath ./DerivedData \
+                   -archivePath ./Pawcus.xcarchive \
+                   CODE_SIGN_IDENTITY="Developer ID Application" \
+                   DEVELOPMENT_TEAM="${{ secrets.TEAM_ID }}" \
+                   CODE_SIGNING_ALLOWED_FOR_APPS=YES \
+                   CODE_SIGN_STYLE=Manual \
+                   ARCHS="arm64" \
+                   ONLY_ACTIVE_ARCH=NO \
+                   archive
+    
+    - name: Create export options
+      run: |
+        cat > export_options.plist << EOF
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
@@ -86,156 +135,332 @@ jobs:
             <key>method</key>
             <string>developer-id</string>
             <key>teamID</key>
-            <string>$TEAM_ID</string>
+            <string>${{ secrets.TEAM_ID }}</string>
+            <key>signingCertificate</key>
+            <string>Developer ID Application</string>
+            <key>signingStyle</key>
+            <string>manual</string>
         </dict>
         </plist>
         EOF
-        
+                   
+    - name: Export app
+      run: |
         xcodebuild -exportArchive \
-          -archivePath build/Pawcus.xcarchive \
-          -exportPath build/export \
-          -exportOptionsPlist ExportOptions.plist
-        
-        # Move app to expected location
-        mv build/export/Pawcus.app build/Pawcus.app
+                   -archivePath ./Pawcus.xcarchive \
+                   -exportPath ./Export \
+                   -exportOptionsPlist ./export_options.plist \
+                   -allowProvisioningUpdates
     
-    - name: Notarize App
+    - name: Notarize app
       env:
         APPLE_ID: ${{ secrets.APPLE_ID }}
         APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-        TEAM_ID: ${{ secrets.TEAM_ID }}
       run: |
-        cd source
-        
-        # Create zip for notarization
-        ditto -c -k --keepParent build/Pawcus.app build/Pawcus.zip
-        
-        # Submit for notarization
-        xcrun notarytool submit build/Pawcus.zip \
-          --apple-id "$APPLE_ID" \
-          --password "$APPLE_ID_PASSWORD" \
-          --team-id "$TEAM_ID" \
-          --wait
-        
-        # Staple the notarization
-        xcrun stapler staple build/Pawcus.app
+        if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
+          echo "Notarizing app..."
+          # Create a ZIP file for notarization
+          cd ./Export
+          ditto -c -k --sequesterRsrc --keepParent Pawcus.app Pawcus-notarize.zip
+          
+          # Submit for notarization
+          xcrun notarytool submit Pawcus-notarize.zip \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_ID_PASSWORD" \
+            --team-id "${{ secrets.TEAM_ID }}" \
+            --wait
+          
+          # Staple the notarization ticket
+          xcrun stapler staple Pawcus.app
+          cd ..
+        else
+          echo "Skipping notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
+        fi
+                   
+    - name: Install create-dmg
+      run: brew install create-dmg
     
-    - name: Create DMG
+    - name: Create styled DMG
       run: |
-        cd source
+        VERSION="${{ steps.version.outputs.version }}"
+        DMG_NAME="Pawcus-Installer-$VERSION.dmg"
         
-        # Create DMG
-        DMG_NAME="Pawcus-Installer-${{ inputs.version }}"
-        DMG_DIR="dmg_temp"
+        # create-dmg로 스타일링된 DMG 생성
+        create-dmg \
+          --volname "Pawcus Installer" \
+          --window-pos 200 120 \
+          --window-size 800 450 \
+          --icon-size 100 \
+          --icon "Pawcus.app" 200 190 \
+          --hide-extension "Pawcus.app" \
+          --app-drop-link 600 185 \
+          --hdiutil-quiet \
+          "$DMG_NAME" \
+          "./Export/Pawcus.app"
         
-        # Clean up any existing files
-        rm -rf "$DMG_DIR"
-        rm -f "${DMG_NAME}.dmg"
+        # 기존 파일명으로도 복사 (호환성 유지)
+        cp "$DMG_NAME" "./Pawcus.dmg"
         
-        # Create temporary directory
-        mkdir -p "$DMG_DIR"
-        
-        # Copy app and create Applications symlink
-        cp -R build/Pawcus.app "$DMG_DIR/"
-        ln -s /Applications "$DMG_DIR/Applications"
-        
-        # Create DMG
-        hdiutil create -volname "$DMG_NAME" \
-          -srcfolder "$DMG_DIR" \
-          -ov -format UDZO \
-          "${DMG_NAME}.dmg"
-        
-        # Clean up
-        rm -rf "$DMG_DIR"
+        echo "STYLED_DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
     
-    - name: Generate Sparkle Signature
+    - name: Notarize DMG
       env:
-        SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
+        APPLE_ID: ${{ secrets.APPLE_ID }}
+        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
       run: |
-        cd source
+        if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
+          echo "Notarizing DMG..."
+          # Submit DMG for notarization
+          xcrun notarytool submit ./Pawcus.dmg \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_ID_PASSWORD" \
+            --team-id "${{ secrets.TEAM_ID }}" \
+            --wait
+          
+          # Staple the notarization ticket
+          xcrun stapler staple ./Pawcus.dmg
+        else
+          echo "Skipping DMG notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
+        fi
         
-        DMG_FILE="Pawcus-Installer-${{ inputs.version }}.dmg"
+    - name: Create ZIP for Sparkle
+      run: |
+        cd ./Export
+        # Create a clean zip for Sparkle (without __MACOSX folders)
+        ditto -c -k --sequesterRsrc --keepParent Pawcus.app ../Pawcus.zip
+        cd ..
         
-        # Create signature using EdDSA private key
-        # This is a simplified version - in production you'd use Sparkle's sign_update tool
-        SIGNATURE=$(echo -n "$DMG_FILE" | openssl dgst -sha256 -sign <(echo "$SPARKLE_PRIVATE_KEY" | xxd -r -p) | base64)
+    - name: Download and setup Sparkle tools
+      run: |
+        curl -L -o Sparkle-2.7.0.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.7.0/Sparkle-2.7.0.tar.xz
+        tar -xf Sparkle-2.7.0.tar.xz
         
-        echo "SPARKLE_SIGNATURE=$SIGNATURE" >> $GITHUB_ENV
-        echo "DMG_SIZE=$(stat -f%z "$DMG_FILE")" >> $GITHUB_ENV
-    
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ inputs.version }}
-        name: Pawcus v${{ inputs.version }}
-        draft: false
-        prerelease: false
-        files: |
-          source/Pawcus-Installer-${{ inputs.version }}.dmg
-        body: |
-          ## What's Changed
-          
-          - Released version ${{ inputs.version }}
-          
-          ## Installation
-          
-          1. Download the DMG file
-          2. Open the DMG and drag Pawcus to your Applications folder
-          3. Grant accessibility permissions when prompted
-          
-          ## Auto-Update
-          
-          This version includes Sparkle auto-update support.
+    - name: Setup EdDSA key and sign update
+      id: sign_update
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Update Appcast
+        SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
       run: |
-        cd source
+        if [ -n "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
+          echo "Setting up EdDSA private key..."
+          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
+          chmod 600 ~/private_key.pem
+          
+          # Debug: Check if files exist
+          ls -la Pawcus.zip
+          ls -la ~/private_key.pem
+          ls -la ./bin/sign_update
+          
+          # Sign the update
+          echo "Signing update..."
+          ./bin/sign_update Pawcus.zip ~/private_key.pem > signature_output.txt 2>&1 || true
+          echo "Sign command exit code: $?"
+          cat signature_output.txt
+          
+          # Extract signature more carefully
+          if grep -q 'sparkle:edSignature=' signature_output.txt; then
+            SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+            echo "Successfully extracted signature: $SIGNATURE"
+            echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+          else
+            echo "No signature found in output"
+            echo "signature=" >> $GITHUB_OUTPUT
+          fi
+          
+          # Clean up
+          rm ~/private_key.pem
+        else
+          echo "No EdDSA private key provided, skipping signing"
+          echo "signature=" >> $GITHUB_OUTPUT
+        fi
         
-        # Create or update appcast.xml
-        cat > appcast.xml << EOF
-        <?xml version="1.0" encoding="utf-8"?>
-        <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
-          <channel>
-            <title>Pawcus Updates</title>
-            <link>https://github.com/swmaeStrong/Pawcus-Public</link>
-            <description>Pawcus App Updates</description>
-            <language>en</language>
-            <item>
-              <title>Version ${{ inputs.version }}</title>
-              <description><![CDATA[
-                <h2>What's New in ${{ inputs.version }}</h2>
-                <ul>
-                  <li>Latest updates and improvements</li>
-                </ul>
-              ]]></description>
-              <pubDate>$(date -R)</pubDate>
-              <sparkle:version>${{ inputs.version }}</sparkle:version>
-              <sparkle:shortVersionString>${{ inputs.version }}</sparkle:shortVersionString>
-              <enclosure 
-                url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v${{ inputs.version }}/Pawcus-Installer-${{ inputs.version }}.dmg"
-                length="${{ env.DMG_SIZE }}"
-                type="application/octet-stream"
-                sparkle:edSignature="${{ env.SPARKLE_SIGNATURE }}" />
-            </item>
-          </channel>
+    - name: Calculate checksums and file size
+      id: sparkle_info
+      run: |
+        SHA=$(shasum -a 256 Pawcus.zip | awk '{print $1}')
+        SIZE=$(stat -f%z Pawcus.zip)
+        echo "sha256=$SHA" >> $GITHUB_OUTPUT
+        echo "size=$SIZE" >> $GITHUB_OUTPUT
+        shasum -a 256 Pawcus.dmg > Pawcus.dmg.sha256
+        shasum -a 256 Pawcus.zip > Pawcus.zip.sha256
+        
+    - name: Generate Sparkle appcast.xml
+      run: |
+        SIGNATURE="${{ steps.sign_update.outputs.signature }}"
+        
+        echo "Received signature: '$SIGNATURE'"
+        if [ -n "$SIGNATURE" ] && [ "$SIGNATURE" != "" ] && [ "$SIGNATURE" != "null" ]; then
+          echo "Creating appcast.xml with EdDSA signature"
+          # With EdDSA signature
+          cat > appcast.xml << EOF
+        <?xml version="1.0" standalone="yes"?>
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+            <channel>
+                <title>Pawcus</title>
+                <language>en</language>
+                <item>
+                    <title>Version ${{ steps.version.outputs.version }}</title>
+                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
+                    <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
+                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                              sparkle:shortVersionString="${{ steps.version.outputs.version }}"
+                              sparkle:edSignature="$SIGNATURE"
+                              length="${{ steps.sparkle_info.outputs.size }}"
+                              type="application/octet-stream" />
+                </item>
+            </channel>
         </rss>
         EOF
+        else
+          # Without EdDSA signature (not recommended for production)
+          cat > appcast.xml << EOF
+        <?xml version="1.0" standalone="yes"?>
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+            <channel>
+                <title>Pawcus</title>
+                <language>en</language>
+                <item>
+                    <title>Version ${{ steps.version.outputs.version }}</title>
+                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
+                    <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
+                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                              sparkle:shortVersionString="${{ steps.version.outputs.version }}"
+                              length="${{ steps.sparkle_info.outputs.size }}"
+                              type="application/octet-stream" />
+                </item>
+            </channel>
+        </rss>
+        EOF
+        fi
         
-        # Commit appcast to the release repo
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        
-        # Checkout the current repo (release repo)
-        cd ..
-        git checkout main || git checkout -b main
-        cp source/appcast.xml .
-        git add appcast.xml
-        git commit -m "Update appcast for v${{ inputs.version }}" || echo "No changes to commit"
-        git push origin main
-    
-    - name: Clean up keychain
-      if: always()
+    - name: Update GitHub Pages with appcast.xml
       run: |
-        security delete-keychain build.keychain || true
+        echo "📤 Updating appcast.xml on GitHub Pages..."
+        
+        # Git 설정
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 현재 브랜치 확인 및 설정
+        git checkout main || git checkout -b main
+        
+        # 현재 변경사항 확인
+        if [ -f "appcast.xml" ]; then
+          echo "✅ appcast.xml generated successfully"
+          ls -la appcast.xml
+          
+          # GitHub Pages에 추가 (gitignore 무시)
+          git add -f appcast.xml
+          
+          # 변경사항이 있는지 확인
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes to appcast.xml"
+          else
+            echo "📝 Committing appcast.xml changes"
+            git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
+            git push origin main
+          fi
+        else
+          echo "❌ appcast.xml not found"
+          exit 1
+        fi
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        release_name: Pawcus ${{ steps.version.outputs.version }}
+        body: |
+          ## Pawcus ${{ steps.version.outputs.version }}
+          
+          ### Installation
+          
+          **Homebrew (Recommended):**
+          ```bash
+          # 신규 설치
+          brew tap swmaeStrong/pawcus
+          brew install --cask pawcus
+          
+          # 업데이트
+          brew update && brew upgrade --cask pawcus
+          ```
+          
+          **Direct Download:**
+          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pawcus-install/Pawcus-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
+          - Download `Pawcus.dmg` for basic installer (GitHub asset)
+          - Download `Pawcus.zip` for portable version (GitHub asset)
+          
+          ### Auto-Update
+          Pawcus will automatically check for updates and notify you when a new version is available.
+          
+          ### Changes
+          - Bug fixes and improvements
+          
+          ### System Requirements
+          - macOS 15.0 or later
+          - Accessibility permissions required
+          
+        draft: false
+        prerelease: false
+        
+    - name: Upload DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pawcus.dmg
+        asset_name: Pawcus.dmg
+        asset_content_type: application/octet-stream
+        
+    - name: Upload ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pawcus.zip
+        asset_name: Pawcus.zip
+        asset_content_type: application/zip
+        
+    - name: Upload DMG checksum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pawcus.dmg.sha256
+        asset_name: Pawcus.dmg.sha256
+        asset_content_type: text/plain
+        
+    - name: Upload ZIP checksum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pawcus.zip.sha256
+        asset_name: Pawcus.zip.sha256
+        asset_content_type: text/plain
+        
+    - name: Upload appcast.xml
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./appcast.xml
+        asset_name: appcast.xml
+        asset_content_type: application/xml
+        
+    - name: Trigger Homebrew update
+      run: |
+        curl -X POST \
+          -H "Authorization: token ${{ secrets.HOMEBREW_UPDATE_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/swmaeStrong/homebrew-pawcus/dispatches \
+          -d '{"event_type":"update-cask","client_payload":{"version":"${{ steps.version.outputs.version }}"}}'
