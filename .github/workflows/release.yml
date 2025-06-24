@@ -341,16 +341,24 @@ jobs:
         EOF
         fi
         
+    - name: Checkout release repo for appcast update
+      uses: actions/checkout@v4
+      with:
+        path: release-repo
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Update GitHub Pages with appcast.xml
       run: |
         echo "📤 Updating appcast.xml on GitHub Pages..."
         
+        # Copy appcast.xml to release repo
+        cp appcast.xml release-repo/
+        
+        cd release-repo
+        
         # Git 설정
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        
-        # 현재 브랜치 확인 및 설정
-        git checkout main || git checkout -b main
         
         # 현재 변경사항 확인
         if [ -f "appcast.xml" ]; then
