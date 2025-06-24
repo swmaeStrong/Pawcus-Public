@@ -113,6 +113,19 @@ jobs:
         echo "=== project.pbxproj MARKETING_VERSION ==="
         grep "MARKETING_VERSION" source/Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
     
+    - name: Clear any existing user data
+      run: |
+        # UserDefaults 정리
+        defaults delete pawcus.dev 2>/dev/null || true
+        
+        # SwiftData DB 정리
+        rm -rf ~/Library/Application\ Support/pawcus.dev/ 2>/dev/null || true
+        
+        # Keychain 항목 정리
+        security delete-generic-password -s "pawcus" 2>/dev/null || true
+        
+        echo "✅ Cleared any existing user data"
+        
     - name: Build app
       run: |
         cd source
