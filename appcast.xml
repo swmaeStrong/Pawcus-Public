@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Pawcus</title>
+        <language>en</language>
+        <item>
+            <title>Version 0.7.7</title>
+            <pubDate>Tue, 24 Jun 2025 07:41:00 GMT</pubDate>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v0.7.7/Pawcus.zip"
+                      sparkle:version="77"
+                      sparkle:shortVersionString="0.7.7"
+                      length="4071127"
+                      type="application/octet-stream" />
+        </item>
+    </channel>
+</rss>
