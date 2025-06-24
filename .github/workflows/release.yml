@@ -16,8 +16,12 @@ jobs:
     runs-on: macos-latest
     
     steps:
-    - name: Checkout code
+    - name: Checkout source code from private repo
       uses: actions/checkout@v4
+      with:
+        repository: 'swmaeStrong/MVP_Mac'
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        path: source
     
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -46,8 +50,8 @@ jobs:
     
     - name: Create Config.xcconfig
       run: |
-        mkdir -p Pawcus/Pawcus/Data/Config
-        cat > Pawcus/Pawcus/Data/Config/Config.xcconfig << EOF
+        mkdir -p source/Pawcus/Pawcus/Data/Config
+        cat > source/Pawcus/Pawcus/Data/Config/Config.xcconfig << EOF
         //
         //  Config.xcconfig
         //  Pawcus
@@ -89,28 +93,29 @@ jobs:
         BUILD_NUM="${{ steps.version.outputs.build_number }}"
         
         # Update CFBundleVersion in Info.plist
-        sed -i.bak '/CFBundleVersion/{n;s|<string>[^<]*</string>|<string>'$BUILD_NUM'</string>|;}' Pawcus/Pawcus-Info.plist
+        sed -i.bak '/CFBundleVersion/{n;s|<string>[^<]*</string>|<string>'$BUILD_NUM'</string>|;}' source/Pawcus/Pawcus-Info.plist
         echo "Updated Info.plist CFBundleVersion to $BUILD_NUM"
         
         # Update CURRENT_PROJECT_VERSION in project.pbxproj
-        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' Pawcus/Pawcus.xcodeproj/project.pbxproj
+        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' source/Pawcus/Pawcus.xcodeproj/project.pbxproj
         echo "Updated project.pbxproj CURRENT_PROJECT_VERSION to $BUILD_NUM"
         
         # Update MARKETING_VERSION in project.pbxproj
         VERSION="${{ steps.version.outputs.version }}"
-        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' Pawcus/Pawcus.xcodeproj/project.pbxproj
+        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' source/Pawcus/Pawcus.xcodeproj/project.pbxproj
         echo "Updated project.pbxproj MARKETING_VERSION to $VERSION"
         
         # Verify changes
         echo "=== Info.plist CFBundleVersion ==="
-        grep -A 1 "CFBundleVersion" Pawcus/Pawcus-Info.plist
+        grep -A 1 "CFBundleVersion" source/Pawcus/Pawcus-Info.plist
         echo "=== project.pbxproj CURRENT_PROJECT_VERSION ==="
-        grep "CURRENT_PROJECT_VERSION" Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
+        grep "CURRENT_PROJECT_VERSION" source/Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
         echo "=== project.pbxproj MARKETING_VERSION ==="
-        grep "MARKETING_VERSION" Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
+        grep "MARKETING_VERSION" source/Pawcus/Pawcus.xcodeproj/project.pbxproj | head -2
     
     - name: Build app
       run: |
+        cd source
         xcodebuild -project Pawcus/Pawcus.xcodeproj \
                    -scheme Pawcus \
                    -configuration Release \
@@ -127,6 +132,7 @@ jobs:
     
     - name: Create export options
       run: |
+        cd source
         cat > export_options.plist << EOF
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -146,6 +152,7 @@ jobs:
                    
     - name: Export app
       run: |
+        cd source
         xcodebuild -exportArchive \
                    -archivePath ./Pawcus.xcarchive \
                    -exportPath ./Export \
@@ -160,7 +167,7 @@ jobs:
         if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
           echo "Notarizing app..."
           # Create a ZIP file for notarization
-          cd ./Export
+          cd source/Export
           ditto -c -k --sequesterRsrc --keepParent Pawcus.app Pawcus-notarize.zip
           
           # Submit for notarization
@@ -172,7 +179,7 @@ jobs:
           
           # Staple the notarization ticket
           xcrun stapler staple Pawcus.app
-          cd ..
+          cd ../..
         else
           echo "Skipping notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
         fi
@@ -196,7 +203,7 @@ jobs:
           --app-drop-link 600 185 \
           --hdiutil-quiet \
           "$DMG_NAME" \
-          "./Export/Pawcus.app"
+          "./source/Export/Pawcus.app"
         
         # 기존 파일명으로도 복사 (호환성 유지)
         cp "$DMG_NAME" "./Pawcus.dmg"
@@ -225,10 +232,10 @@ jobs:
         
     - name: Create ZIP for Sparkle
       run: |
-        cd ./Export
+        cd ./source/Export
         # Create a clean zip for Sparkle (without __MACOSX folders)
-        ditto -c -k --sequesterRsrc --keepParent Pawcus.app ../Pawcus.zip
-        cd ..
+        ditto -c -k --sequesterRsrc --keepParent Pawcus.app ../../Pawcus.zip
+        cd ../..
         
     - name: Download and setup Sparkle tools
       run: |
