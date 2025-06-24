@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pawcus - macOS 생산성 앱 다운로드</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .download-btn {
+            display: inline-block;
+            background: #007AFF;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin: 1rem;
+        }
+        .download-btn:hover {
+            background: #0056CC;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Pawcus</h1>
+        <p>macOS 생산성 추적 앱</p>
+        
+        <a href="#" class="download-btn" id="download-btn">
+            📦 macOS용 다운로드
+        </a>
+        
+        <p>최신 버전: <span id="version">로딩중...</span></p>
+        
+        <p>
+            <a href="https://github.com/swmaeStrong/Pawcus-Public" style="color: white;">GitHub</a>
+        </p>
+    </div>
+
+    <script>
+        async function loadVersion() {
+            try {
+                const response = await fetch('https://api.github.com/repos/swmaeStrong/Pawcus-Public/releases/latest');
+                const release = await response.json();
+                
+                document.getElementById('version').textContent = release.tag_name;
+                
+                const dmgAsset = release.assets.find(asset => asset.name.endsWith('.dmg'));
+                if (dmgAsset) {
+                    document.getElementById('download-btn').href = dmgAsset.browser_download_url;
+                }
+            } catch (error) {
+                document.getElementById('version').textContent = '정보를 불러올 수 없습니다';
+            }
+        }
+        
+        loadVersion();
+    </script>
+</body>
+</html>
