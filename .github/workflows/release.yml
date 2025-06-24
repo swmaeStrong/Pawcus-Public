@@ -58,8 +58,13 @@ jobs:
     - name: Build Pawcus
       env:
         TEAM_ID: ${{ secrets.TEAM_ID }}
+        DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
       run: |
         cd source
+        
+        # Ensure we're using the right Xcode
+        export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+        xcodebuild -version
         
         # Build the app
         xcodebuild -project Pawcus/Pawcus.xcodeproj \
