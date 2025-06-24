@@ -10,7 +10,7 @@ on:
       source_repo:
         description: 'Source repository (owner/repo)'
         required: true
-        default: 'swmaeStrong/MVP_Mac'
+        default: 'swmaeStrong/Pawcus'
         type: string
       source_ref:
         description: 'Source branch/tag/commit'
