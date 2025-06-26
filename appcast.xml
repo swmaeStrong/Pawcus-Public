@@ -7,9 +7,7 @@
             <title>Version 0.8.7</title>
             <pubDate>Thu, 26 Jun 2025 17:51:48 GMT</pubDate>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:minimumAutoupdateVersion>87</sparkle:minimumAutoupdateVersion>
-            <sparkle:criticalUpdate />
-            <sparkle:ignoreSkippedUpgradesBelowVersion>87</sparkle:ignoreSkippedUpgradesBelowVersion>
+            <sparkle:minimumAutoupdateVersion>85</sparkle:minimumAutoupdateVersion>
             <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v0.8.7/Pawcus.zip"
                       sparkle:version="87"
                       sparkle:shortVersionString="0.8.7"
