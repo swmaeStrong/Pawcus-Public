@@ -322,7 +322,8 @@ jobs:
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>${{ steps.version.outputs.build_number }}</sparkle:minimumAutoupdateVersion>
-                    <sparkle:criticalUpdate sparkle:version="${{ steps.version.outputs.build_number }}" />
+                    <sparkle:criticalUpdate />
+                    <sparkle:ignoreSkippedUpgradesBelowVersion>${{ steps.version.outputs.build_number }}</sparkle:ignoreSkippedUpgradesBelowVersion>
                     <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
                               sparkle:shortVersionString="${{ steps.version.outputs.version }}"
@@ -346,7 +347,8 @@ jobs:
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>${{ steps.version.outputs.build_number }}</sparkle:minimumAutoupdateVersion>
-                    <sparkle:criticalUpdate sparkle:version="${{ steps.version.outputs.build_number }}" />
+                    <sparkle:criticalUpdate />
+                    <sparkle:ignoreSkippedUpgradesBelowVersion>${{ steps.version.outputs.build_number }}</sparkle:ignoreSkippedUpgradesBelowVersion>
                     <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
                               sparkle:shortVersionString="${{ steps.version.outputs.version }}"
