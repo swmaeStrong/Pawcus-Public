@@ -7,7 +7,7 @@
             <title>Version 0.9.5</title>
             <pubDate>Thu, 03 Jul 2025 02:54:54 GMT</pubDate>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:minimumAutoupdateVersion>85</sparkle:minimumAutoupdateVersion>
+            <sparkle:minimumAutoupdateVersion>95</sparkle:minimumAutoupdateVersion>
             <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v0.9.5/Pawcus.zip"
                       sparkle:version="95"
                       sparkle:shortVersionString="0.9.5"
