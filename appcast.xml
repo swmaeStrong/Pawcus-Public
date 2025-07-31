@@ -4,14 +4,14 @@
         <title>Pawcus</title>
         <language>en</language>
         <item>
-            <title>Version v1.1.0</title>
-            <pubDate>Thu, 31 Jul 2025 12:35:35 GMT</pubDate>
+            <title>Version 1.1.0</title>
+            <pubDate>Thu, 31 Jul 2025 12:44:37 GMT</pubDate>
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/vv1.1.0/Pawcus.zip"
-                      sparkle:version="v110"
-                      sparkle:shortVersionString="v1.1.0"
-                      length="7367786"
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.1.0/Pawcus.zip"
+                      sparkle:version="110"
+                      sparkle:shortVersionString="1.1.0"
+                      length="7367762"
                       type="application/octet-stream" />
         </item>
     </channel>
