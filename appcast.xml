@@ -6,8 +6,8 @@
         <item>
             <title>Version 1.1.2</title>
             <pubDate>Sat, 02 Aug 2025 07:34:50 GMT</pubDate>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:minimumAutoupdateVersion>112</sparkle:minimumAutoupdateVersion>
             <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.1.2/Pawcus.zip"
                       sparkle:version="112"
                       sparkle:shortVersionString="1.1.2"
