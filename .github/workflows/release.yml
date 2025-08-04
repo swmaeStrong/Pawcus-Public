@@ -181,7 +181,7 @@ jobs:
           echo "Notarizing app..."
           # Create a ZIP file for notarization
           cd source/Export
-          ditto -c -k --sequesterRsrc --keepParent Pawcus.app Pawcus-notarize.zip
+          ditto -c -k --sequesterRsrc --keepParent Pomocore.app Pawcus-notarize.zip
           
           # Submit for notarization
           xcrun notarytool submit Pawcus-notarize.zip \
@@ -191,7 +191,7 @@ jobs:
             --wait
           
           # Staple the notarization ticket
-          xcrun stapler staple Pawcus.app
+          xcrun stapler staple Pomocore.app
           cd ../..
         else
           echo "Skipping notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
@@ -203,23 +203,23 @@ jobs:
     - name: Create styled DMG
       run: |
         VERSION="${{ steps.version.outputs.version }}"
-        DMG_NAME="Pawcus-Installer-$VERSION.dmg"
+        DMG_NAME="Pomocore-Installer-$VERSION.dmg"
         
         # create-dmg로 스타일링된 DMG 생성
         create-dmg \
-          --volname "Pawcus Installer" \
+          --volname "Pomocore Installer" \
           --window-pos 200 120 \
           --window-size 800 450 \
           --icon-size 100 \
-          --icon "Pawcus.app" 200 190 \
-          --hide-extension "Pawcus.app" \
+          --icon "Pomocore.app" 200 190 \
+          --hide-extension "Pomocore.app" \
           --app-drop-link 600 185 \
           --hdiutil-quiet \
           "$DMG_NAME" \
-          "./source/Export/Pawcus.app"
+          "./source/Export/Pomocore.app"
         
         # 기존 파일명으로도 복사 (호환성 유지)
-        cp "$DMG_NAME" "./Pawcus.dmg"
+        cp "$DMG_NAME" "./Pomocore.dmg"
         
         echo "STYLED_DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
     
@@ -231,14 +231,14 @@ jobs:
         if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
           echo "Notarizing DMG..."
           # Submit DMG for notarization
-          xcrun notarytool submit ./Pawcus.dmg \
+          xcrun notarytool submit ./Pomocore.dmg \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_ID_PASSWORD" \
             --team-id "${{ secrets.TEAM_ID }}" \
             --wait
           
           # Staple the notarization ticket
-          xcrun stapler staple ./Pawcus.dmg
+          xcrun stapler staple ./Pomocore.dmg
         else
           echo "Skipping DMG notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
         fi
@@ -247,7 +247,7 @@ jobs:
       run: |
         cd ./source/Export
         # Create a clean zip for Sparkle (without __MACOSX folders)
-        ditto -c -k --sequesterRsrc --keepParent Pawcus.app ../../Pawcus.zip
+        ditto -c -k --sequesterRsrc --keepParent Pomocore.app ../../Pomocore.zip
         cd ../..
         
     - name: Download and setup Sparkle tools
@@ -266,13 +266,13 @@ jobs:
           chmod 600 ~/private_key.pem
           
           # Debug: Check if files exist
-          ls -la Pawcus.zip
+          ls -la Pomocore.zip
           ls -la ~/private_key.pem
           ls -la ./bin/sign_update
           
           # Sign the update
           echo "Signing update..."
-          ./bin/sign_update Pawcus.zip ~/private_key.pem > signature_output.txt 2>&1 || true
+          ./bin/sign_update Pomocore.zip ~/private_key.pem > signature_output.txt 2>&1 || true
           echo "Sign command exit code: $?"
           cat signature_output.txt
           
@@ -296,12 +296,12 @@ jobs:
     - name: Calculate checksums and file size
       id: sparkle_info
       run: |
-        SHA=$(shasum -a 256 Pawcus.zip | awk '{print $1}')
-        SIZE=$(stat -f%z Pawcus.zip)
+        SHA=$(shasum -a 256 Pomocore.zip | awk '{print $1}')
+        SIZE=$(stat -f%z Pomocore.zip)
         echo "sha256=$SHA" >> $GITHUB_OUTPUT
         echo "size=$SIZE" >> $GITHUB_OUTPUT
-        shasum -a 256 Pawcus.dmg > Pawcus.dmg.sha256
-        shasum -a 256 Pawcus.zip > Pawcus.zip.sha256
+        shasum -a 256 Pomocore.dmg > Pomocore.dmg.sha256
+        shasum -a 256 Pomocore.zip > Pomocore.zip.sha256
         
     - name: Generate Sparkle appcast.xml
       run: |
@@ -317,14 +317,14 @@ jobs:
         <?xml version="1.0" standalone="yes"?>
         <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
             <channel>
-                <title>Pawcus</title>
+                <title>Pomocore</title>
                 <language>en</language>
                 <item>
                     <title>Version ${{ steps.version.outputs.version }}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
-                    <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
                               sparkle:shortVersionString="${{ steps.version.outputs.version }}"
                               sparkle:edSignature="$SIGNATURE"
@@ -340,14 +340,14 @@ jobs:
         <?xml version="1.0" standalone="yes"?>
         <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
             <channel>
-                <title>Pawcus</title>
+                <title>Pomocore</title>
                 <language>en</language>
                 <item>
                     <title>Version ${{ steps.version.outputs.version }}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
-                    <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pawcus.zip"
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
                               sparkle:shortVersionString="${{ steps.version.outputs.version }}"
                               length="${{ steps.sparkle_info.outputs.size }}"
@@ -405,35 +405,35 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.version.outputs.tag }}
-        release_name: Pawcus ${{ steps.version.outputs.version }}
+        release_name: Pomocore ${{ steps.version.outputs.version }}
         body: |
-          ## Pawcus ${{ steps.version.outputs.version }}
+          ## Pomocore ${{ steps.version.outputs.version }}
           
           ### Installation
           
           **Homebrew (Recommended):**
           ```bash
           # 신규 설치
-          brew tap swmaeStrong/pawcus
-          brew install --cask pawcus
+          brew tap swmaeStrong/pomocore
+          brew install --cask pomocore
           
           # 업데이트
-          brew update && brew upgrade --cask pawcus
+          brew update && brew upgrade --cask pomocore
           ```
           
           **Direct Download:**
-          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pawcus-install/Pawcus-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
-          - Download `Pawcus.dmg` for basic installer (GitHub asset)
-          - Download `Pawcus.zip` for portable version (GitHub asset)
+          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Pomocore-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
+          - Download `Pomocore.dmg` for basic installer (GitHub asset)
+          - Download `Pomocore.zip` for portable version (GitHub asset)
           
           ### Auto-Update
-          Pawcus will automatically check for updates and notify you when a new version is available.
+          Pomocore will automatically check for updates and notify you when a new version is available.
           
           ### Changes
           - Bug fixes and improvements
           
           ### System Requirements
-          - macOS 15.0 or later
+          - macOS 14.0 or later
           - Accessibility permissions required
           
         draft: false
@@ -445,8 +445,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pawcus.dmg
-        asset_name: Pawcus.dmg
+        asset_path: ./Pomocore.dmg
+        asset_name: Pomocore.dmg
         asset_content_type: application/octet-stream
         
     - name: Upload ZIP
@@ -455,8 +455,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pawcus.zip
-        asset_name: Pawcus.zip
+        asset_path: ./Pomocore.zip
+        asset_name: Pomocore.zip
         asset_content_type: application/zip
         
     - name: Upload DMG checksum
@@ -465,8 +465,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pawcus.dmg.sha256
-        asset_name: Pawcus.dmg.sha256
+        asset_path: ./Pomocore.dmg.sha256
+        asset_name: Pomocore.dmg.sha256
         asset_content_type: text/plain
         
     - name: Upload ZIP checksum
@@ -475,8 +475,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pawcus.zip.sha256
-        asset_name: Pawcus.zip.sha256
+        asset_path: ./Pomocore.zip.sha256
+        asset_name: Pomocore.zip.sha256
         asset_content_type: text/plain
         
     - name: Upload appcast.xml
@@ -494,5 +494,5 @@ jobs:
         curl -X POST \
           -H "Authorization: token ${{ secrets.HOMEBREW_UPDATE_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/swmaeStrong/homebrew-pawcus/dispatches \
+          https://api.github.com/repos/swmaeStrong/homebrew-pomocore/dispatches \
           -d '{"event_type":"update-cask","client_payload":{"version":"${{ steps.version.outputs.version }}"}}'
