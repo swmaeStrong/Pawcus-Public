@@ -97,21 +97,21 @@ jobs:
         echo "Updated Info.plist CFBundleVersion to $BUILD_NUM"
         
         # Update CURRENT_PROJECT_VERSION in project.pbxproj
-        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' source/Pomocore/Pomocore/Pomocore.xcodeproj/project.pbxproj
+        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' source/Pomocore/Pomocore.xcodeproj/project.pbxproj
         echo "Updated project.pbxproj CURRENT_PROJECT_VERSION to $BUILD_NUM"
         
         # Update MARKETING_VERSION in project.pbxproj
         VERSION="${{ steps.version.outputs.version }}"
-        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' source/Pomocore/Pomocore/Pomocore.xcodeproj/project.pbxproj
+        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' source/Pomocore/Pomocore.xcodeproj/project.pbxproj
         echo "Updated project.pbxproj MARKETING_VERSION to $VERSION"
         
         # Verify changes
         echo "=== Info.plist CFBundleVersion ==="
         grep -A 1 "CFBundleVersion" source/Pomocore/Pomocore/Pomocore-Info.plist
         echo "=== project.pbxproj CURRENT_PROJECT_VERSION ==="
-        grep "CURRENT_PROJECT_VERSION" source/Pomocore/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
+        grep "CURRENT_PROJECT_VERSION" source/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
         echo "=== project.pbxproj MARKETING_VERSION ==="
-        grep "MARKETING_VERSION" source/Pomocore/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
+        grep "MARKETING_VERSION" source/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
     
     - name: Clear any existing user data
       run: |
@@ -129,7 +129,7 @@ jobs:
     - name: Build app
       run: |
         cd source
-        xcodebuild -project Pomocore/Pomocore/Pomocore.xcodeproj \
+        xcodebuild -project Pomocore/Pomocore.xcodeproj \
                    -scheme Pomocore \
                    -configuration Release \
                    -destination "generic/platform=macOS" \
