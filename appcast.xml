@@ -4,14 +4,14 @@
         <title>Pomocore</title>
         <language>en</language>
         <item>
-            <title>Version 1.1.3</title>
-            <pubDate>Tue, 05 Aug 2025 14:29:26 GMT</pubDate>
+            <title>Version 1.1.4</title>
+            <pubDate>Thu, 07 Aug 2025 07:00:55 GMT</pubDate>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.1.3/Pomocore.zip"
-                      sparkle:version="113"
-                      sparkle:shortVersionString="1.1.3"
-                      length="7147096"
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.1.4/Pomocore.zip"
+                      sparkle:version="114"
+                      sparkle:shortVersionString="1.1.4"
+                      length="7599146"
                       type="application/octet-stream" />
         </item>
     </channel>
