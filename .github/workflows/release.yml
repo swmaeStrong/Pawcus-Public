@@ -306,9 +306,13 @@ jobs:
     - name: Generate Sparkle appcast.xml
       run: |
         SIGNATURE="${{ steps.sign_update.outputs.signature }}"
+        VERSION="${{ steps.version.outputs.version }}"
         
         echo "Received signature: '$SIGNATURE'"
         echo "Using minimum autoupdate version: 110"
+        
+        # GitHub Pages URL for release notes
+        RELEASE_NOTES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/release-notes/${VERSION}.html"
         
         if [ -n "$SIGNATURE" ] && [ "$SIGNATURE" != "" ] && [ "$SIGNATURE" != "null" ]; then
           echo "Creating appcast.xml with EdDSA signature"
@@ -320,13 +324,14 @@ jobs:
                 <title>Pomocore</title>
                 <language>en</language>
                 <item>
-                    <title>Version ${{ steps.version.outputs.version }}</title>
+                    <title>Version ${VERSION}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
                     <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
-                              sparkle:shortVersionString="${{ steps.version.outputs.version }}"
+                              sparkle:shortVersionString="${VERSION}"
                               sparkle:edSignature="$SIGNATURE"
                               length="${{ steps.sparkle_info.outputs.size }}"
                               type="application/octet-stream" />
@@ -343,13 +348,14 @@ jobs:
                 <title>Pomocore</title>
                 <language>en</language>
                 <item>
-                    <title>Version ${{ steps.version.outputs.version }}</title>
+                    <title>Version ${VERSION}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
                     <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
                     <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
                               sparkle:version="${{ steps.version.outputs.build_number }}"
-                              sparkle:shortVersionString="${{ steps.version.outputs.version }}"
+                              sparkle:shortVersionString="${VERSION}"
                               length="${{ steps.sparkle_info.outputs.size }}"
                               type="application/octet-stream" />
                 </item>
@@ -410,16 +416,6 @@ jobs:
           ## Pomocore ${{ steps.version.outputs.version }}
           
           ### Installation
-          
-          **Homebrew (Recommended):**
-          ```bash
-          # 신규 설치
-          brew tap swmaeStrong/pomocore
-          brew install --cask pomocore
-          
-          # 업데이트
-          brew update && brew upgrade --cask pomocore
-          ```
           
           **Direct Download:**
           - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Pomocore-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
@@ -488,11 +484,3 @@ jobs:
         asset_path: ./appcast.xml
         asset_name: appcast.xml
         asset_content_type: application/xml
-        
-    - name: Trigger Homebrew update
-      run: |
-        curl -X POST \
-          -H "Authorization: token ${{ secrets.HOMEBREW_UPDATE_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/swmaeStrong/homebrew-pomocore/dispatches \
-          -d '{"event_type":"update-cask","client_payload":{"version":"${{ steps.version.outputs.version }}"}}'
