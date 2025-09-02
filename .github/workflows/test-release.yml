@@ -369,6 +369,7 @@ jobs:
       with:
         path: release-repo
         token: ${{ secrets.GITHUB_TOKEN }}
+        ref: main
         
     - name: Update GitHub Pages with test-appcast.xml
       run: |
