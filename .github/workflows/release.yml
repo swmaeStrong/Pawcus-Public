@@ -1,486 +1,331 @@
-#name: Build and Release
-#
-#on:
-#  push:
-#    tags:
-#      - 'v*'
-#  workflow_dispatch:
-#    inputs:
-#      version:
-#        description: 'Release version (e.g., 1.0.0)'
-#        required: true
-#        type: string
-#
-#jobs:
-#  build-and-release:
-#    runs-on: macos-latest
-#    
-#    steps:
-#    - name: Checkout source code from private repo
-#      uses: actions/checkout@v4
-#      with:
-#        repository: 'swmaeStrong/MVP_Mac'
-#        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-#        path: source
-#    
-#    - name: Set up Xcode
-#      uses: maxim-lobanov/setup-xcode@v1
-#      with:
-#        xcode-version: 'latest'
-#    
-#    - name: Install Developer ID certificate
-#      env:
-#        DEVELOPER_ID_APPLICATION_CERT: ${{ secrets.DEVELOPER_ID_APPLICATION_CERT }}
-#        DEVELOPER_ID_APPLICATION_PASSWORD: ${{ secrets.DEVELOPER_ID_APPLICATION_PASSWORD }}
-#        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-#      run: |
-#        # Create keychain
-#        security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-#        security default-keychain -s build.keychain
-#        security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-#        security set-keychain-settings -t 3600 -u build.keychain
-#        
-#        # Import certificate
-#        echo "$DEVELOPER_ID_APPLICATION_CERT" | base64 --decode > certificate.p12
-#        security import certificate.p12 -k build.keychain -P "$DEVELOPER_ID_APPLICATION_PASSWORD" -T /usr/bin/codesign
-#        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" build.keychain
-#        
-#        # Clean up
-#        rm certificate.p12
-#    
-#    - name: Create Config.xcconfig
-#      run: |
-#        mkdir -p source/Pomocore/Pomocore/Data/Config
-#        cat > source/Pomocore/Pomocore/Data/Config/Config.xcconfig << EOF
-#        //
-#        //  Config.xcconfig
-#        //  Pomocore
-#        //
-#        //  Auto-generated during CI/CD
-#        //
-#
-#        // Configuration settings file format documentation can be found at:
-#        // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
-#        BASE_DOMAIN = ${{ secrets.BASE_DOMAIN }}
-#        SUPABASE_KEY = ${{ secrets.SUPABASE_KEY }}
-#        SUPABASE_DOMAIN = ${{ secrets.SUPABASE_DOMAIN }}
-#        EOF
-#      
-#    - name: Setup version and build number
-#      id: version
-#      run: |
-#        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-#          VERSION="${{ github.event.inputs.version }}"
-#          echo "version=$VERSION" >> $GITHUB_OUTPUT
-#          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
-#        else
-#          VERSION="${GITHUB_REF#refs/tags/v}"
-#          echo "version=$VERSION" >> $GITHUB_OUTPUT
-#          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-#        fi
-#        
-#        # Calculate build number: remove dots and convert to integer
-#        # e.g., 0.6.2 -> 62, 1.0.0 -> 100
-#        BUILD_NUMBER=$(echo "$VERSION" | sed 's/\.//g' | sed 's/^0*//')
-#        if [ -z "$BUILD_NUMBER" ]; then
-#          BUILD_NUMBER=1
-#        fi
-#        echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
-#        echo "Version: $VERSION, Build Number: $BUILD_NUMBER"
-#    
-#    - name: Update build numbers
-#      run: |
-#        BUILD_NUM="${{ steps.version.outputs.build_number }}"
-#        
-#        # Update CFBundleVersion in Info.plist
-#        sed -i.bak '/CFBundleVersion/{n;s|<string>[^<]*</string>|<string>'$BUILD_NUM'</string>|;}' source/Pomocore/Pomocore/Pomocore-Info.plist
-#        echo "Updated Info.plist CFBundleVersion to $BUILD_NUM"
-#        
-#        # Update CURRENT_PROJECT_VERSION in project.pbxproj
-#        sed -i.bak 's|CURRENT_PROJECT_VERSION = [^;]*;|CURRENT_PROJECT_VERSION = '$BUILD_NUM';|g' source/Pomocore/Pomocore.xcodeproj/project.pbxproj
-#        echo "Updated project.pbxproj CURRENT_PROJECT_VERSION to $BUILD_NUM"
-#        
-#        # Update MARKETING_VERSION in project.pbxproj
-#        VERSION="${{ steps.version.outputs.version }}"
-#        sed -i.bak 's|MARKETING_VERSION = [^;]*;|MARKETING_VERSION = '$VERSION';|g' source/Pomocore/Pomocore.xcodeproj/project.pbxproj
-#        echo "Updated project.pbxproj MARKETING_VERSION to $VERSION"
-#        
-#        # Verify changes
-#        echo "=== Info.plist CFBundleVersion ==="
-#        grep -A 1 "CFBundleVersion" source/Pomocore/Pomocore/Pomocore-Info.plist
-#        echo "=== project.pbxproj CURRENT_PROJECT_VERSION ==="
-#        grep "CURRENT_PROJECT_VERSION" source/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
-#        echo "=== project.pbxproj MARKETING_VERSION ==="
-#        grep "MARKETING_VERSION" source/Pomocore/Pomocore.xcodeproj/project.pbxproj | head -2
-#    
-#    - name: Clear any existing user data
-#      run: |
-#        # UserDefaults 정리
-#        defaults delete pomocore.dev 2>/dev/null || true
-#        
-#        # SwiftData DB 정리
-#        rm -rf ~/Library/Application\ Support/pomocore.dev/ 2>/dev/null || true
-#        
-#        # Keychain 항목 정리
-#        security delete-generic-password -s "pomocore" 2>/dev/null || true
-#        
-#        echo "✅ Cleared any existing user data"
-#        
-#    - name: Build app
-#      run: |
-#        cd source
-#        xcodebuild -project Pomocore/Pomocore.xcodeproj \
-#                   -scheme Pomocore \
-#                   -configuration Release \
-#                   -destination "generic/platform=macOS" \
-#                   -derivedDataPath ./DerivedData \
-#                   -archivePath ./Pomocore.xcarchive \
-#                   CODE_SIGN_IDENTITY="Developer ID Application" \
-#                   DEVELOPMENT_TEAM="${{ secrets.TEAM_ID }}" \
-#                   CODE_SIGNING_ALLOWED_FOR_APPS=YES \
-#                   CODE_SIGN_STYLE=Manual \
-#                   ARCHS="arm64 x86_64" \
-#                   ONLY_ACTIVE_ARCH=NO \
-#                   archive
-#    
-#    - name: Create export options
-#      run: |
-#        cd source
-#        cat > export_options.plist << EOF
-#        <?xml version="1.0" encoding="UTF-8"?>
-#        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-#        <plist version="1.0">
-#        <dict>
-#            <key>method</key>
-#            <string>developer-id</string>
-#            <key>teamID</key>
-#            <string>${{ secrets.TEAM_ID }}</string>
-#            <key>signingCertificate</key>
-#            <string>Developer ID Application</string>
-#            <key>signingStyle</key>
-#            <string>manual</string>
-#        </dict>
-#        </plist>
-#        EOF
-#                   
-#    - name: Export app
-#      run: |
-#        cd source
-#        xcodebuild -exportArchive \
-#                   -archivePath ./Pomocore.xcarchive \
-#                   -exportPath ./Export \
-#                   -exportOptionsPlist ./export_options.plist \
-#                   -allowProvisioningUpdates
-#    
-#    - name: Notarize app
-#      env:
-#        APPLE_ID: ${{ secrets.APPLE_ID }}
-#        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-#      run: |
-#        if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
-#          echo "Notarizing app..."
-#          # Create a ZIP file for notarization
-#          cd source/Export
-#          ditto -c -k --sequesterRsrc --keepParent Pomocore.app Pomocore-notarize.zip
-#          
-#          # Submit for notarization
-#          xcrun notarytool submit Pomocore-notarize.zip \
-#            --apple-id "$APPLE_ID" \
-#            --password "$APPLE_ID_PASSWORD" \
-#            --team-id "${{ secrets.TEAM_ID }}" \
-#            --wait
-#          
-#          # Staple the notarization ticket
-#          xcrun stapler staple Pomocore.app
-#          cd ../..
-#        else
-#          echo "Skipping notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
-#        fi
-#                   
-#    - name: Install create-dmg
-#      run: brew install create-dmg
-#    
-#    - name: Create styled DMG
-#      run: |
-#        VERSION="${{ steps.version.outputs.version }}"
-#        DMG_NAME="Pomocore-Installer-$VERSION.dmg"
-#        
-#        # create-dmg로 스타일링된 DMG 생성
-#        create-dmg \
-#          --volname "Pomocore Installer" \
-#          --window-pos 200 120 \
-#          --window-size 800 450 \
-#          --icon-size 100 \
-#          --icon "Pomocore.app" 200 190 \
-#          --hide-extension "Pomocore.app" \
-#          --app-drop-link 600 185 \
-#          --hdiutil-quiet \
-#          "$DMG_NAME" \
-#          "./source/Export/Pomocore.app"
-#        
-#        # 기존 파일명으로도 복사 (호환성 유지)
-#        cp "$DMG_NAME" "./Pomocore.dmg"
-#        
-#        echo "STYLED_DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
-#    
-#    - name: Notarize DMG
-#      env:
-#        APPLE_ID: ${{ secrets.APPLE_ID }}
-#        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-#      run: |
-#        if [ -n "$APPLE_ID" ] && [ -n "$APPLE_ID_PASSWORD" ]; then
-#          echo "Notarizing DMG..."
-#          # Submit DMG for notarization
-#          xcrun notarytool submit ./Pomocore.dmg \
-#            --apple-id "$APPLE_ID" \
-#            --password "$APPLE_ID_PASSWORD" \
-#            --team-id "${{ secrets.TEAM_ID }}" \
-#            --wait
-#          
-#          # Staple the notarization ticket
-#          xcrun stapler staple ./Pomocore.dmg
-#        else
-#          echo "Skipping DMG notarization (APPLE_ID or APPLE_ID_PASSWORD not set)"
-#        fi
-#        
-#    - name: Create ZIP for Sparkle
-#      run: |
-#        cd ./source/Export
-#        # Create a clean zip for Sparkle (without __MACOSX folders)
-#        ditto -c -k --sequesterRsrc --keepParent Pomocore.app ../../Pomocore.zip
-#        cd ../..
-#        
-#    - name: Download and setup Sparkle tools
-#      run: |
-#        curl -L -o Sparkle-2.7.0.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.7.0/Sparkle-2.7.0.tar.xz
-#        tar -xf Sparkle-2.7.0.tar.xz
-#        
-#    - name: Setup EdDSA key and sign update
-#      id: sign_update
-#      env:
-#        SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
-#      run: |
-#        if [ -n "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
-#          echo "Setting up EdDSA private key..."
-#          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
-#          chmod 600 ~/private_key.pem
-#          
-#          # Debug: Check if files exist
-#          ls -la Pomocore.zip
-#          ls -la ~/private_key.pem
-#          ls -la ./bin/sign_update
-#          
-#          # Sign the update
-#          echo "Signing update..."
-#          ./bin/sign_update Pomocore.zip ~/private_key.pem > signature_output.txt 2>&1 || true
-#          echo "Sign command exit code: $?"
-#          cat signature_output.txt
-#          
-#          # Extract signature more carefully
-#          if grep -q 'sparkle:edSignature=' signature_output.txt; then
-#            SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
-#            echo "Successfully extracted signature: $SIGNATURE"
-#            echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
-#          else
-#            echo "No signature found in output"
-#            echo "signature=" >> $GITHUB_OUTPUT
-#          fi
-#          
-#          # Clean up
-#          rm ~/private_key.pem
-#        else
-#          echo "No EdDSA private key provided, skipping signing"
-#          echo "signature=" >> $GITHUB_OUTPUT
-#        fi
-#        
-#    - name: Calculate checksums and file size
-#      id: sparkle_info
-#      run: |
-#        SHA=$(shasum -a 256 Pomocore.zip | awk '{print $1}')
-#        SIZE=$(stat -f%z Pomocore.zip)
-#        echo "sha256=$SHA" >> $GITHUB_OUTPUT
-#        echo "size=$SIZE" >> $GITHUB_OUTPUT
-#        shasum -a 256 Pomocore.dmg > Pomocore.dmg.sha256
-#        shasum -a 256 Pomocore.zip > Pomocore.zip.sha256
-#        
-#    - name: Generate Sparkle appcast.xml
-#      run: |
-#        SIGNATURE="${{ steps.sign_update.outputs.signature }}"
-#        VERSION="${{ steps.version.outputs.version }}"
-#        
-#        echo "Received signature: '$SIGNATURE'"
-#        echo "Using minimum autoupdate version: 110"
-#        
-#        # GitHub Pages URL for release notes
-#        RELEASE_NOTES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/release-notes/${VERSION}.html"
-#        
-#        if [ -n "$SIGNATURE" ] && [ "$SIGNATURE" != "" ] && [ "$SIGNATURE" != "null" ]; then
-#          echo "Creating appcast.xml with EdDSA signature"
-#          # With EdDSA signature
-#          cat > appcast.xml << EOF
-#        <?xml version="1.0" standalone="yes"?>
-#        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
-#            <channel>
-#                <title>Pomocore</title>
-#                <language>en</language>
-#                <item>
-#                    <title>Version ${VERSION}</title>
-#                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
-#                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-#                    <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-#                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
-#                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
-#                              sparkle:version="${{ steps.version.outputs.build_number }}"
-#                              sparkle:shortVersionString="${VERSION}"
-#                              sparkle:edSignature="$SIGNATURE"
-#                              length="${{ steps.sparkle_info.outputs.size }}"
-#                              type="application/octet-stream" />
-#                </item>
-#            </channel>
-#        </rss>
-#        EOF
-#        else
-#          # Without EdDSA signature (not recommended for production)
-#          cat > appcast.xml << EOF
-#        <?xml version="1.0" standalone="yes"?>
-#        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
-#            <channel>
-#                <title>Pomocore</title>
-#                <language>en</language>
-#                <item>
-#                    <title>Version ${VERSION}</title>
-#                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
-#                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-#                    <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-#                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
-#                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
-#                              sparkle:version="${{ steps.version.outputs.build_number }}"
-#                              sparkle:shortVersionString="${VERSION}"
-#                              length="${{ steps.sparkle_info.outputs.size }}"
-#                              type="application/octet-stream" />
-#                </item>
-#            </channel>
-#        </rss>
-#        EOF
-#        fi
-#        
-#    - name: Checkout release repo for appcast update
-#      uses: actions/checkout@v4
-#      with:
-#        path: release-repo
-#        token: ${{ secrets.GITHUB_TOKEN }}
-#        
-#    - name: Update GitHub Pages with appcast.xml
-#      run: |
-#        echo "📤 Updating appcast.xml on GitHub Pages..."
-#        
-#        # Copy appcast.xml to release repo
-#        cp appcast.xml release-repo/
-#        
-#        cd release-repo
-#        
-#        # Git 설정
-#        git config --local user.email "action@github.com"
-#        git config --local user.name "GitHub Action"
-#        
-#        # 현재 변경사항 확인
-#        if [ -f "appcast.xml" ]; then
-#          echo "✅ appcast.xml generated successfully"
-#          ls -la appcast.xml
-#          
-#          # GitHub Pages에 추가 (gitignore 무시)
-#          git add -f appcast.xml
-#          
-#          # 변경사항이 있는지 확인
-#          if git diff --staged --quiet; then
-#            echo "ℹ️ No changes to appcast.xml"
-#          else
-#            echo "📝 Committing appcast.xml changes"
-#            git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
-#            git push origin main
-#          fi
-#        else
-#          echo "❌ appcast.xml not found"
-#          exit 1
-#        fi
-#        
-#    - name: Create Release
-#      id: create_release
-#      uses: actions/create-release@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        tag_name: ${{ steps.version.outputs.tag }}
-#        release_name: Pomocore ${{ steps.version.outputs.version }}
-#        body: |
-#          ## Pomocore ${{ steps.version.outputs.version }}
-#          
-#          ### Installation
-#          
-#          **Direct Download:**
-#          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Pomocore-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
-#          - Download `Pomocore.dmg` for basic installer (GitHub asset)
-#          - Download `Pomocore.zip` for portable version (GitHub asset)
-#          
-#          ### Auto-Update
-#          Pomocore will automatically check for updates and notify you when a new version is available.
-#          
-#          ### Changes
-#          - Bug fixes and improvements
-#          
-#          ### System Requirements
-#          - macOS 14.0 or later
-#          - Accessibility permissions required
-#          
-#        draft: false
-#        prerelease: false
-#        
-#    - name: Upload DMG
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./Pomocore.dmg
-#        asset_name: Pomocore.dmg
-#        asset_content_type: application/octet-stream
-#        
-#    - name: Upload ZIP
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./Pomocore.zip
-#        asset_name: Pomocore.zip
-#        asset_content_type: application/zip
-#        
-#    - name: Upload DMG checksum
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./Pomocore.dmg.sha256
-#        asset_name: Pomocore.dmg.sha256
-#        asset_content_type: text/plain
-#        
-#    - name: Upload ZIP checksum
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./Pomocore.zip.sha256
-#        asset_name: Pomocore.zip.sha256
-#        asset_content_type: text/plain
-#        
-#    - name: Upload appcast.xml
-#      uses: actions/upload-release-asset@v1
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./appcast.xml
-#        asset_name: appcast.xml
-#        asset_content_type: application/xml
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Check for pre-built app in Archives
+      id: check_archives
+      run: |
+        # Find any .app in Archives folder
+        APP_NAME=$(find ./Archives -name "*.app" -type d | head -n 1)
+        if [ -n "$APP_NAME" ]; then
+          echo "prebuilt_exists=true" >> $GITHUB_OUTPUT
+          echo "app_path=$APP_NAME" >> $GITHUB_OUTPUT
+          echo "✅ Found pre-built app: $APP_NAME"
+        else
+          echo "prebuilt_exists=false" >> $GITHUB_OUTPUT
+          echo "❌ No .app found in Archives folder"
+          ls -la ./Archives/
+          exit 1
+        fi
+    
+    - name: Setup version and build number
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+        else
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+        
+        # Calculate build number: remove dots and convert to integer
+        # e.g., 0.6.2 -> 62, 1.0.0 -> 100
+        BUILD_NUMBER=$(echo "$VERSION" | sed 's/\.//g' | sed 's/^0*//')
+        if [ -z "$BUILD_NUMBER" ]; then
+          BUILD_NUMBER=1
+        fi
+        echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION, Build Number: $BUILD_NUMBER"
+    
+    - name: Create ZIP from pre-built app
+      run: |
+        mkdir -p ./Export
+        APP_PATH=$(find ./Archives -name "*.app" -type d | head -n 1)
+        APP_NAME=$(basename "$APP_PATH")
+        cp -R "$APP_PATH" ./Export/
+        
+        cd ./Export
+        ditto -c -k --sequesterRsrc --keepParent "$APP_NAME" ../Pomocore.zip
+        cd ..
+                   
+    - name: Install create-dmg
+      run: brew install create-dmg
+    
+    - name: Create styled DMG from pre-built app
+      run: |
+        VERSION="${{ steps.version.outputs.version }}"
+        DMG_NAME="Pomocore-Installer-$VERSION.dmg"
+        APP_PATH=$(find ./Archives -name "*.app" -type d | head -n 1)
+        
+        # create-dmg로 스타일링된 DMG 생성
+        create-dmg \
+          --volname "Pomocore Installer" \
+          --window-pos 200 120 \
+          --window-size 800 450 \
+          --icon-size 100 \
+          --icon "$(basename "$APP_PATH")" 200 190 \
+          --hide-extension "$(basename "$APP_PATH")" \
+          --app-drop-link 600 185 \
+          --hdiutil-quiet \
+          "$DMG_NAME" \
+          "$APP_PATH"
+        
+        # 기존 파일명으로도 복사 (호환성 유지)
+        cp "$DMG_NAME" "./Pomocore.dmg"
+        
+        echo "STYLED_DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
+        
+    - name: Download and setup Sparkle tools
+      run: |
+        curl -L -o Sparkle-2.7.0.tar.xz https://github.com/sparkle-project/Sparkle/releases/download/2.7.0/Sparkle-2.7.0.tar.xz
+        tar -xf Sparkle-2.7.0.tar.xz
+        
+    - name: Setup EdDSA key and sign update
+      id: sign_update
+      env:
+        SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
+      run: |
+        if [ -n "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
+          echo "Setting up EdDSA private key..."
+          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
+          chmod 600 ~/private_key.pem
+          
+          # Debug: Check if files exist
+          ls -la Pomocore.zip
+          ls -la ~/private_key.pem
+          ls -la ./bin/sign_update
+          
+          # Sign the update
+          echo "Signing update..."
+          ./bin/sign_update Pomocore.zip ~/private_key.pem > signature_output.txt 2>&1 || true
+          echo "Sign command exit code: $?"
+          cat signature_output.txt
+          
+          # Extract signature more carefully
+          if grep -q 'sparkle:edSignature=' signature_output.txt; then
+            SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+            echo "Successfully extracted signature: $SIGNATURE"
+            echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+          else
+            echo "No signature found in output"
+            echo "signature=" >> $GITHUB_OUTPUT
+          fi
+          
+          # Clean up
+          rm ~/private_key.pem
+        else
+          echo "No EdDSA private key provided, skipping signing"
+          echo "signature=" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Calculate checksums and file size
+      id: sparkle_info
+      run: |
+        SHA=$(shasum -a 256 Pomocore.zip | awk '{print $1}')
+        SIZE=$(stat -f%z Pomocore.zip)
+        echo "sha256=$SHA" >> $GITHUB_OUTPUT
+        echo "size=$SIZE" >> $GITHUB_OUTPUT
+        shasum -a 256 Pomocore.dmg > Pomocore.dmg.sha256
+        shasum -a 256 Pomocore.zip > Pomocore.zip.sha256
+        
+    - name: Generate Sparkle appcast.xml
+      run: |
+        SIGNATURE="${{ steps.sign_update.outputs.signature }}"
+        VERSION="${{ steps.version.outputs.version }}"
+        
+        echo "Received signature: '$SIGNATURE'"
+        echo "Using minimum autoupdate version: 110"
+        
+        # GitHub Pages URL for release notes
+        RELEASE_NOTES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/release-notes/${VERSION}.html"
+        
+        if [ -n "$SIGNATURE" ] && [ "$SIGNATURE" != "" ] && [ "$SIGNATURE" != "null" ]; then
+          echo "Creating appcast.xml with EdDSA signature"
+          # With EdDSA signature
+          cat > appcast.xml << EOF
+        <?xml version="1.0" standalone="yes"?>
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+            <channel>
+                <title>Pomocore</title>
+                <language>en</language>
+                <item>
+                    <title>Version ${VERSION}</title>
+                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
+                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+                    <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
+                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                              sparkle:shortVersionString="${VERSION}"
+                              sparkle:edSignature="$SIGNATURE"
+                              length="${{ steps.sparkle_info.outputs.size }}"
+                              type="application/octet-stream" />
+                </item>
+            </channel>
+        </rss>
+        EOF
+        else
+          # Without EdDSA signature (not recommended for production)
+          cat > appcast.xml << EOF
+        <?xml version="1.0" standalone="yes"?>
+        <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+            <channel>
+                <title>Pomocore</title>
+                <language>en</language>
+                <item>
+                    <title>Version ${VERSION}</title>
+                    <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
+                    <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+                    <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+                    <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
+                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                              sparkle:shortVersionString="${VERSION}"
+                              length="${{ steps.sparkle_info.outputs.size }}"
+                              type="application/octet-stream" />
+                </item>
+            </channel>
+        </rss>
+        EOF
+        fi
+        
+    - name: Checkout release repo for appcast update
+      uses: actions/checkout@v4
+      with:
+        path: release-repo
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Update GitHub Pages with appcast.xml
+      run: |
+        echo "📤 Updating appcast.xml on GitHub Pages..."
+        
+        # Copy appcast.xml to release repo
+        cp appcast.xml release-repo/
+        
+        cd release-repo
+        
+        # Git 설정
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 현재 변경사항 확인
+        if [ -f "appcast.xml" ]; then
+          echo "✅ appcast.xml generated successfully"
+          ls -la appcast.xml
+          
+          # GitHub Pages에 추가 (gitignore 무시)
+          git add -f appcast.xml
+          
+          # 변경사항이 있는지 확인
+          if git diff --staged --quiet; then
+            echo "ℹ️ No changes to appcast.xml"
+          else
+            echo "📝 Committing appcast.xml changes"
+            git commit -m "Update appcast.xml for version ${{ steps.version.outputs.version }}"
+            git push origin main
+          fi
+        else
+          echo "❌ appcast.xml not found"
+          exit 1
+        fi
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.version.outputs.tag }}
+        release_name: Pomocore ${{ steps.version.outputs.version }}
+        body: |
+          ## Pomocore ${{ steps.version.outputs.version }}
+          
+          ### Installation
+          
+          **Direct Download:**
+          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Pomocore-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
+          - Download `Pomocore.dmg` for basic installer (GitHub asset)
+          - Download `Pomocore.zip` for portable version (GitHub asset)
+          
+          ### Auto-Update
+          Pomocore will automatically check for updates and notify you when a new version is available.
+          
+          ### Changes
+          - Bug fixes and improvements
+          
+          ### System Requirements
+          - macOS 14.0 or later
+          - Accessibility permissions required
+          
+        draft: false
+        prerelease: false
+        
+    - name: Upload DMG
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pomocore.dmg
+        asset_name: Pomocore.dmg
+        asset_content_type: application/octet-stream
+        
+    - name: Upload ZIP
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pomocore.zip
+        asset_name: Pomocore.zip
+        asset_content_type: application/zip
+        
+    - name: Upload DMG checksum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pomocore.dmg.sha256
+        asset_name: Pomocore.dmg.sha256
+        asset_content_type: text/plain
+        
+    - name: Upload ZIP checksum
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./Pomocore.zip.sha256
+        asset_name: Pomocore.zip.sha256
+        asset_content_type: text/plain
+        
+    - name: Upload appcast.xml
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./appcast.xml
+        asset_name: appcast.xml
+        asset_content_type: application/xml
