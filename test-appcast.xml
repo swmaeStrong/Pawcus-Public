@@ -1,0 +1,26 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Pomocore</title>
+        <language>en</language>
+        <item>
+            <title>Test Version 1.1.8</title>
+            <pubDate>Wed, 20 Aug 2025 12:32:59 GMT</pubDate>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
+            <description><![CDATA[
+                <h3>Version Test 1.1.8</h3>
+                <ul>
+                    <li>Bug fixes and performance improvements</li>
+                    <li>Enhanced stability</li>
+                    <li>Fixed timer sound issue</li>
+                </ul>
+            ]]></description>
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.1.8/Pomocore.zip"
+                      sparkle:version="test-v118"
+                      sparkle:shortVersionString="test-v1.1.8"
+                      length="7741695"
+                      type="application/octet-stream" />
+        </item>
+    </channel>
+</rss>
