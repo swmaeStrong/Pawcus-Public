@@ -6,8 +6,6 @@
 	<string>24G90</string>
 	<key>CFBundleDisplayName</key>
 	<string>Pomocore</string>
-	<key>CFBundleExecutable</key>
-	<string>Pomocore</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIconName</key>
@@ -15,7 +13,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>pawcus.dev</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.4</string>
+	<string>1.2.5</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -32,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>124</string>
+	<string>125</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
@@ -58,8 +56,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSAppleEventsUsageDescription</key>
-	<string>Pomocore가 웹 브라우저(Safari, Chrome, Arc 등)에서 현재 보고 있는 URL을 추적하여 사용 통계를 제공하기 위해 Apple Events 권한이 필요합니다.</string>
 	<key>SUAllowsAutomaticUpdates</key>
 	<true/>
 	<key>SUAutomaticallyUpdate</key>
@@ -67,7 +63,7 @@
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://swmaestrong.github.io/Pawcus-Public/test-appcast.xml</string>
+	<string>https://swmaestrong.github.io/Pawcus-Public/appcast.xml</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>7200</integer>
 	<key>SparkleMinimumAutoupdateVersion</key>
