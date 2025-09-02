@@ -4,14 +4,14 @@
         <title>Pomocore Test</title>
         <language>en</language>
         <item>
-            <title>Test Version 1.2.1</title>
-            <pubDate>Tue, 02 Sep 2025 07:07:43 GMT</pubDate>
+            <title>Test Version 1.2.2</title>
+            <pubDate>Tue, 02 Sep 2025 07:14:06 GMT</pubDate>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
-            <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/test-release-notes/1.2.1.html</sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/test-v1.2.1/Pomocore-Test.zip"
-                      sparkle:version="121"
-                      sparkle:shortVersionString="1.2.1"
+            <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/test-release-notes/1.2.2.html</sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/test-v1.2.2/Pomocore-Test.zip"
+                      sparkle:version="122"
+                      sparkle:shortVersionString="1.2.2"
                       length="12149627"
                       type="application/octet-stream" />
         </item>
