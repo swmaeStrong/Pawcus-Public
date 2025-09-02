@@ -18,7 +18,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		ku9WinEFRjikWQ9OZNRp+5bR868=
+		xXE6EfLPfr5SXXBZ8qd0Ml7FwaY=
 		</data>
 		<key>Resources/BarGraph.json</key>
 		<data>
@@ -175,7 +175,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			B5YX/g+jeWhc7IoBh9yF+AstQis=
+			5MrKlXIZc1XQa5MWWkvDPdg0yBY=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.infrastructure" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -250,7 +250,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			igGTxQTlRD8LaaGvT1b7KyLAx7pT8jfs6q0pGecRBQI=
+			E0hZfofyQbQNOBHnRnu+3n/v1joAggz9BcOELSNLfpA=
 			</data>
 		</dict>
 		<key>Resources/BarGraph.json</key>
