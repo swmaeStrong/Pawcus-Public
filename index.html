@@ -48,7 +48,7 @@
             📦 macOS용 다운로드
         </a>
         
-        <p>최신 버전: <span id="v1.1.8">로딩중...</span></p>
+        <p>최신 버전: <span id="version">로딩중...</span></p>
         
         <p>
             <a href="https://github.com/swmaeStrong/Pawcus-Public" style="color: white;">GitHub</a>
@@ -58,14 +58,22 @@
     <script>
         async function loadVersion() {
             try {
-                const response = await fetch('https://api.github.com/repos/swmaeStrong/Pawcus-Public/releases/latest');
-                const release = await response.json();
+                // 모든 릴리즈 가져오기 (latest 대신)
+                const response = await fetch('https://api.github.com/repos/swmaeStrong/Pawcus-Public/releases');
+                const releases = await response.json();
                 
-                document.getElementById('version').textContent = release.tag_name;
+                // test-v로 시작하지 않는 첫 번째 릴리즈 찾기
+                const latestProdRelease = releases.find(release => 
+                    !release.tag_name.startsWith('test-') && !release.prerelease
+                );
                 
-                const dmgAsset = release.assets.find(asset => asset.name.endsWith('.dmg'));
-                if (dmgAsset) {
-                    document.getElementById('download-btn').href = dmgAsset.browser_download_url;
+                if (latestProdRelease) {
+                    document.getElementById('version').textContent = latestProdRelease.tag_name;
+                    
+                    const dmgAsset = latestProdRelease.assets.find(asset => asset.name === 'Pomocore.dmg');
+                    if (dmgAsset) {
+                        document.getElementById('download-btn').href = dmgAsset.browser_download_url;
+                    }
                 }
             } catch (error) {
                 document.getElementById('version').textContent = '정보를 불러올 수 없습니다';

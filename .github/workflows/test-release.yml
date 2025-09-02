@@ -374,8 +374,8 @@ jobs:
       run: |
         echo "📤 Updating test-appcast.xml on GitHub Pages..."
         
-        # Copy test-appcast.xml to release repo
-        cp test-appcast.xml release-repo/
+        # Copy test-appcast.xml to release repo (NOT appcast.xml)
+        cp test-appcast.xml release-repo/test-appcast.xml
         
         cd release-repo
         
@@ -396,7 +396,7 @@ jobs:
             echo "ℹ️ No changes to test-appcast.xml"
           else
             echo "📝 Committing test-appcast.xml changes"
-            git commit -m "Update test-appcast.xml for version ${{ steps.version.outputs.version }}"
+            git commit -m "Update test-appcast.xml for test version ${{ steps.version.outputs.version }}"
             git push origin main
           fi
         else
