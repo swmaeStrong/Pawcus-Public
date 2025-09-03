@@ -9,7 +9,7 @@
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:minimumAutoupdateVersion>110</sparkle:minimumAutoupdateVersion>
             <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/test-release-notes/1.2.5.html</sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/test-v1.2.5/Pomocore-Test.zip"
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.2.5/Pomocore.zip"
                       sparkle:version="125"
                       sparkle:shortVersionString="1.2.5"
                       length="12150007"
