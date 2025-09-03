@@ -6,6 +6,8 @@
 	<string>24G90</string>
 	<key>CFBundleDisplayName</key>
 	<string>Pomocore</string>
+	<key>CFBundleExecutable</key>
+	<string>Pomocore</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundleIconName</key>
@@ -13,7 +15,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>pawcus.dev</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.5</string>
+	<string>1.2.51</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -30,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>125</string>
+	<string>1251</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
