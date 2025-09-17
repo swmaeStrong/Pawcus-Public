@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		g+N5wJ+zOnvCER3r+Jw5cN2Cp1Q=
+		oTO5XLWZ62xS57/immMvJS6FkSM=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -22,14 +22,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1pSlbQYwc/wztgHbdab3IMkGwLfYqwGTsWjaZhtRi4Y=
+			QAFVhkP7YizvnBGH+fp1YYQ1DYyeVKWV7Z3gcWgkWOQ=
 			</data>
 		</dict>
 		<key>Modules/Auth.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			B6tQgTGcJCyCQlv4BM2hYi6USIeaBzA0LSKtiXD1iMU=
+			QBgaBJB1+UhejlVpGFeBM9XjLEE8z2BHrr/sufG5aUY=
 			</data>
 		</dict>
 		<key>Modules/Auth.swiftmodule/x86_64-apple-macos.abi.json</key>
@@ -43,21 +43,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8MkGAUA6zoEJvqP/M0kT0iPp1GDvqAaM7ucJqcyF2/Q=
+			ZUlVD1cJ+M+JU0aDDQ2D1cEj2a4feEhm0xICt+rGcgM=
 			</data>
 		</dict>
 		<key>Modules/Auth.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			IX5SNPeD2sbd6sG6Xk/mzuXe/wdT4XVJ5nJcpcsCRPI=
+			MF+xy/E5E5EBcOOxoh4lJ0ZjSM9/0Rb957c2PhsWGuo=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			YpMGpJJ+hA/T6BBmvIOt+/8YrxnW/ehceLegsnnuJuA=
+			CUSWf2QTDiVjxtCC8HK1ES2cJMDPcQh/PFvvtUOFvYI=
 			</data>
 		</dict>
 	</dict>

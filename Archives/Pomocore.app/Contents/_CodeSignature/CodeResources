@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Amplitude-Swift_AmplitudeSwift.bundle/Contents/Info.plist</key>
 		<data>
-		jfAsLP61jpSDlhu4p0GVfMfUiZg=
+		adSuG19EMBC1I1Jn2h4TgVzdyXA=
 		</data>
 		<key>Resources/Amplitude-Swift_AmplitudeSwift.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -18,7 +18,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		aeNB0/Y+AvcSn4Jft+8cFehmUzo=
+		8TxnUsJhu3IRRkXMk/VMlY1wY+U=
 		</data>
 		<key>Resources/BarGraph.json</key>
 		<data>
@@ -26,7 +26,7 @@
 		</data>
 		<key>Resources/Factory_Factory.bundle/Contents/Info.plist</key>
 		<data>
-		QpNTds/+5QwLhKx09RQvIA2UB9c=
+		c6EO2iuKdiCTbmqujeMApkcj7dQ=
 		</data>
 		<key>Resources/Factory_Factory.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Resources/Pomocore-Info-Staging.plist</key>
 		<data>
-		aQjdnKMXsM7E7K3uldlZIdFPHW0=
+		6Y7/adkgubMSurS7UtgVvcOqnNM=
 		</data>
 		<key>Resources/Stopwatch.json</key>
 		<data>
@@ -60,6 +60,24 @@
 		<data>
 		hA5LT6sIsCDUByB8BVLnJiv0fHM=
 		</data>
+		<key>Resources/en.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			CkzI0gryuO6v9Ze1KuBFKpNeRlo=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>Resources/ko.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			8l6WKez1Dp0BlT9KhreXlxnjpbo=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
 		<key>Resources/playbutton.json</key>
 		<data>
 		vRN3iCLvBdBvTAEPcdlI3D7Zr7o=
@@ -70,7 +88,7 @@
 		</data>
 		<key>Resources/swift-crypto_Crypto.bundle/Contents/Info.plist</key>
 		<data>
-		JJvJ7ANOjUuvX0JVJmDi2DM+RU0=
+		NPjeI26MtINnHTxtVNhZg9EfVAo=
 		</data>
 		<key>Resources/swift-crypto_Crypto.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -96,7 +114,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			t/s7vYvNBQcWH/EW7QQ3jWkQy6Y=
+			7SN2YdeJnSQOtkF9UNnFuoHGdJ0=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "amplitude-swift.AmplitudeSwift" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -105,7 +123,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			rJgiyIHiX5oCEINj7y5u16BpXjM=
+			qFh3L8lVIpBsS8jjgJ7eMj4uo8g=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "analytics-connector-ios.AnalyticsConnector" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -114,7 +132,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			KGiWYEFLkgZU+VosUN9C2C9hSTs=
+			v57uMTgNkjQlOPhf34FPzk+o0X4=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "supabase-swift.Auth" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -123,7 +141,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			zFwA6zbgUeM1ty+eivR39UoREGc=
+			+f64pxCVvDmAPsx6rOIQ8OM+hZY=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "swift-clocks.Clocks" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -132,7 +150,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			0m3SyvW9AJuV3dcJG9iZgOW5K/0=
+			zso87HWcCLI+CpXmIdZZyZ7Iyho=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "swift-concurrency-extras.ConcurrencyExtras" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -141,7 +159,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			VyvODVeg0FjAQx4N1PwpDX4goVk=
+			shl3o4QePT3aEadO0PtFFVRuP5o=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "swift-crypto.Crypto" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -150,7 +168,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			SCuty7YJrB+cfXmzZ3dqq43RC9w=
+			d15kVmHSrgghSm/l0WjDr0sOLdE=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.data" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -159,7 +177,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			GwauPxdqw+G/JLCxFcPKklwH0zA=
+			vpDaqgWeELmUftu7hmaeVOM8jDU=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.domain" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -168,7 +186,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			cNyvHbYfJVe1CZxCk1Z4l0d9uDk=
+			k5lOogcBwHUfga4D34mSZxVSkCg=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "factory.Factory" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -177,7 +195,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			sIWcwUz9Z/TQ2cJPyw/D2nyhlbM=
+			2m4vlSNuhk5MY4rIwsqCCCWTX1A=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "swift-http-types.HTTPTypes" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -186,7 +204,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			WxB2Or5Lxo+fG9NK3qsjOELxx5s=
+			704WAroi85WXg4VYGCGzX8Dq9ko=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "supabase-swift.Helpers" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -195,7 +213,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			CFuwds6UAwSW78KFCSC8DlddEw4=
+			5kx3JNKvUW1Km3uN+0uxqkStFLA=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.infrastructure" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -204,7 +222,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			YJ7sjBqSoknaKC8j5g7oSJFbIRE=
+			OLQ1xfcOWsaZ/98ZzX0MRvWdIpg=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "xctest-dynamic-overlay.IssueReporting" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -213,7 +231,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			cnJmnKMprOC6/jJi6fZL29+g6k0=
+			NxSYTp6NyYpFkMq/r0LljWedXu4=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "xctest-dynamic-overlay.IssueReportingPackageSupport" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -240,7 +258,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			yWqs6748yjtcHp4Heqr8tfrOtFc=
+			F0ItNjiwquxd5BHtcHdcXtHAey4=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "xctest-dynamic-overlay.XCTestDynamicOverlay" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -249,7 +267,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			PbYuuo89fa+wxRWyVfg0PyhOJnaC1zD7SDokixzlkyc=
+			z64hJOb5fqkq4Q8wHdrGnakmQn916k48qcN2+tGaIcw=
 			</data>
 		</dict>
 		<key>Resources/Amplitude-Swift_AmplitudeSwift.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>
@@ -270,7 +288,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			apWb9yhOQNYhfJENChvUKfKK9uIGcFI0K6iG/ypxs6E=
+			r1RuQB0mammOVqf8aoUXAEHbmwXG7qn2Y//vEzRMWg4=
 			</data>
 		</dict>
 		<key>Resources/BarGraph.json</key>
@@ -284,7 +302,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xXdWT1WghGURorGDdpK/YjpTrIjqnfKsSxzZVw5XYc4=
+			ll3CsG1t81eyXZHeODVxLFUI8lEtDsfKWgTy300vq1I=
 			</data>
 		</dict>
 		<key>Resources/Factory_Factory.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>
@@ -319,7 +337,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xRik7DaqvbISPyHs1S+F7CM5ZZDcTU/3UH/skk5j/Nw=
+			vPhBTFnQSADvic2vMU2B3+sqrrTADwLvfcuPPwMBG1c=
 			</data>
 		</dict>
 		<key>Resources/Stopwatch.json</key>
@@ -343,6 +361,24 @@
 			pCxS92jyv7hUbTblP9L/R+Tyr+umnGg/1CO/Zsv4iH0=
 			</data>
 		</dict>
+		<key>Resources/en.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			1Zerl5EPurSZBctUBM5SARJW36NDLEGSfxn0xp3JP5E=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
+		<key>Resources/ko.lproj/Localizable.strings</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			Q6uQlX9EJ79V3mb7YCL5L1NDKpB583j3QEPQNOii6ss=
+			</data>
+			<key>optional</key>
+			<true/>
+		</dict>
 		<key>Resources/playbutton.json</key>
 		<dict>
 			<key>hash2</key>
@@ -361,7 +397,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			in4DS3oaaFjt2+6BEpCZD942VgJI+lejlS/tt3PMOmU=
+			58jfmfuhZxaN4SqCofQr6d0Q4f7MATwrx4HNeD+SnlQ=
 			</data>
 		</dict>
 		<key>Resources/swift-crypto_Crypto.bundle/Contents/Resources/PrivacyInfo.xcprivacy</key>

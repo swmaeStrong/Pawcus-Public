@@ -10,6 +10,8 @@
 	<string>Pomocore Dev</string>
 	<key>CFBundleIdentifier</key>
 	<string>pawcus.dev.staging</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Pomocore needs to access browser information to block distracting websites and track focus sessions. This allows the app to redirect blocked sites and monitor your current webpage during productivity sessions.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
