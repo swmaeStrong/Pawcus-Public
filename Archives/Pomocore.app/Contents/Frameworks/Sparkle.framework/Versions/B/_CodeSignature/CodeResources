@@ -948,7 +948,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			hWnEW9o0dtoVewZE+cXebewOGek=
+			+OKQWfiRPptwKPN1098VcbtInTE=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "Autoupdate-555549442a006fc962db330cbcadfaa40625e4c6" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -1915,7 +1915,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			KTYl5wAnBKfjXOA5fmcu4UXC8BQ=
+			IrJd8HyrEwFp0WRwsSgbjlEH1mc=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "org.sparkle-project.Sparkle.Updater" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -1924,7 +1924,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			UfIJgrzo5k2h2qp4CYLmsL3e85Y=
+			m2oylCjNLBvKF4tsxoQpuaszsyc=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "org.sparkle-project.DownloaderService" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -1933,7 +1933,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			lFP7N55CmBD8LrKtCCNLHfo68jg=
+			NEoLWsqsheh2hj4+Qmf/PpKb9KY=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "org.sparkle-project.InstallerLauncher" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>

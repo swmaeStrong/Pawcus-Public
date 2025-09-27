@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		TD73AlmS06kpX+5Zkg1x3llB8F0=
+		GW/dOoXLxeG0RLND/pC2Dqvr3Ho=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -22,14 +22,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			7YmSEnODd6CKY8Qjv8og8zgaYXeXiamKxM8SGtTaZ/I=
+			7UsE16TyGoyjDCRjvq6nwrHXZQRWvjLZmwGTjrm4nv8=
 			</data>
 		</dict>
 		<key>Modules/IssueReporting.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Xr2ZDCOSThMLNjmAlKKo/FIDbO9b/wGGIdgvsMfgo5A=
+			FF3RBdES+7LnUIrLsqQ3+bHb/ODTtB0EE1mtBRC1xFM=
 			</data>
 		</dict>
 		<key>Modules/IssueReporting.swiftmodule/x86_64-apple-macos.abi.json</key>
@@ -43,21 +43,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IpWjZCtGVEGiBVcwSGywC8nEAjrUgClVxSuzkQRCyS4=
+			ziTM4eyPP5qX2r6Du9pLXO0TzYysZBq4Jx9HE64CoRE=
 			</data>
 		</dict>
 		<key>Modules/IssueReporting.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vi/mMsxgrg1bzbLkh0We/1KtvpE5EHA3rdbU7lxQcV4=
+			h5eT0vhQ2viZXDBiOluQTjayfu7mgBjx7O8TOxiVqAg=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			lheHjxK1eUKPezYpt3eDCjlNOazMV19IdBQLOXnr4c0=
+			ussX4wmXLXsYtJeDyvCmue7MyYIEYvPyTJ/dM5x7jyc=
 			</data>
 		</dict>
 	</dict>
