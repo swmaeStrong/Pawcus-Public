@@ -63,9 +63,9 @@ jobs:
         APP_PATH=$(find ./Archives -name "*.app" -type d | head -n 1)
         APP_NAME=$(basename "$APP_PATH")
         cp -R "$APP_PATH" ./Export/
-        
+
         cd ./Export
-        ditto -c -k --sequesterRsrc --keepParent "$APP_NAME" ../Pomocore.zip
+        ditto -c -k --sequesterRsrc --keepParent "$APP_NAME" ../Comolib.zip
         cd ..
                    
     - name: Install create-dmg
@@ -74,12 +74,12 @@ jobs:
     - name: Create styled DMG from pre-built app
       run: |
         VERSION="${{ steps.version.outputs.version }}"
-        DMG_NAME="Pomocore-Installer-$VERSION.dmg"
+        DMG_NAME="Co-molib-Installer-$VERSION.dmg"
         APP_PATH=$(find ./Archives -name "*.app" -type d | head -n 1)
-        
+
         # create-dmg로 스타일링된 DMG 생성
         create-dmg \
-          --volname "Pomocore Installer" \
+          --volname "Co-molib Installer" \
           --window-pos 200 120 \
           --window-size 800 450 \
           --icon-size 100 \
@@ -89,10 +89,10 @@ jobs:
           --hdiutil-quiet \
           "$DMG_NAME" \
           "$APP_PATH"
-        
+
         # 기존 파일명으로도 복사 (호환성 유지)
-        cp "$DMG_NAME" "./Pomocore.dmg"
-        
+        cp "$DMG_NAME" "./Co-molib.dmg"
+
         echo "STYLED_DMG_NAME=$DMG_NAME" >> $GITHUB_ENV
         
     - name: Download and setup Sparkle tools
@@ -109,15 +109,15 @@ jobs:
           echo "Setting up EdDSA private key..."
           echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
           chmod 600 ~/private_key.pem
-          
+
           # Debug: Check if files exist
-          ls -la Pomocore.zip
+          ls -la Comolib.zip
           ls -la ~/private_key.pem
           ls -la ./bin/sign_update
-          
+
           # Sign the update
           echo "Signing update..."
-          ./bin/sign_update Pomocore.zip ~/private_key.pem > signature_output.txt 2>&1 || true
+          ./bin/sign_update Comolib.zip ~/private_key.pem > signature_output.txt 2>&1 || true
           echo "Sign command exit code: $?"
           cat signature_output.txt
           
@@ -141,24 +141,25 @@ jobs:
     - name: Calculate checksums and file size
       id: sparkle_info
       run: |
-        SHA=$(shasum -a 256 Pomocore.zip | awk '{print $1}')
-        SIZE=$(stat -f%z Pomocore.zip)
+        SHA=$(shasum -a 256 Comolib.zip | awk '{print $1}')
+        SIZE=$(stat -f%z Comolib.zip)
         echo "sha256=$SHA" >> $GITHUB_OUTPUT
         echo "size=$SIZE" >> $GITHUB_OUTPUT
-        shasum -a 256 Pomocore.dmg > Pomocore.dmg.sha256
-        shasum -a 256 Pomocore.zip > Pomocore.zip.sha256
+        shasum -a 256 Co-molib.dmg > Co-molib.dmg.sha256
+        shasum -a 256 Comolib.zip > Comolib.zip.sha256
         
     - name: Generate Sparkle appcast.xml
       run: |
         SIGNATURE="${{ steps.sign_update.outputs.signature }}"
         VERSION="${{ steps.version.outputs.version }}"
-        
+        BUILD_NUMBER="${{ steps.version.outputs.build_number }}"
+
         echo "Received signature: '$SIGNATURE'"
-        echo "Using minimum autoupdate version: 1259"
-        
+        echo "Using critical update version: $BUILD_NUMBER"
+
         # GitHub Pages URL for release notes
         RELEASE_NOTES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/release-notes/${VERSION}.html"
-        
+
         if [ -n "$SIGNATURE" ] && [ "$SIGNATURE" != "" ] && [ "$SIGNATURE" != "null" ]; then
           echo "Creating appcast.xml with EdDSA signature"
           # With EdDSA signature
@@ -172,10 +173,10 @@ jobs:
                     <title>Version ${VERSION}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-                    <sparkle:minimumAutoupdateVersion>1259</sparkle:minimumAutoupdateVersion>
+                    <sparkle:criticalUpdate sparkle:version="$BUILD_NUMBER"/>
                     <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
-                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
-                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Comolib.zip"
+                              sparkle:version="$BUILD_NUMBER"
                               sparkle:shortVersionString="${VERSION}"
                               sparkle:edSignature="$SIGNATURE"
                               length="${{ steps.sparkle_info.outputs.size }}"
@@ -196,10 +197,10 @@ jobs:
                     <title>Version ${VERSION}</title>
                     <pubDate>$(date -u +"%a, %d %b %Y %H:%M:%S GMT")</pubDate>
                     <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-                    <sparkle:minimumAutoupdateVersion>1259</sparkle:minimumAutoupdateVersion>
+                    <sparkle:criticalUpdate sparkle:version="$BUILD_NUMBER"/>
                     <sparkle:releaseNotesLink>${RELEASE_NOTES_URL}</sparkle:releaseNotesLink>
-                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Pomocore.zip"
-                              sparkle:version="${{ steps.version.outputs.build_number }}"
+                    <enclosure url="https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.tag }}/Comolib.zip"
+                              sparkle:version="$BUILD_NUMBER"
                               sparkle:shortVersionString="${VERSION}"
                               length="${{ steps.sparkle_info.outputs.size }}"
                               type="application/octet-stream" />
@@ -256,19 +257,19 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.version.outputs.tag }}
-        release_name: Pomocore ${{ steps.version.outputs.version }}
+        release_name: Comolib ${{ steps.version.outputs.version }}
         body: |
-          ## Pomocore ${{ steps.version.outputs.version }}
-          
+          ## Comolib ${{ steps.version.outputs.version }}
+
           ### Installation
-          
+
           **Direct Download:**
-          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Pomocore-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
-          - Download `Pomocore.dmg` for basic installer (GitHub asset)
-          - Download `Pomocore.zip` for portable version (GitHub asset)
-          
+          - [**🎨 Styled Installer (Recommended)**](https://agsrumeaczdydskvqxlr.supabase.co/storage/v1/object/public/pomocore-install/Co-molib-Installer-${{ steps.version.outputs.version }}.dmg) - Beautiful drag-and-drop installer
+          - Download `Co-molib.dmg` for basic installer (GitHub asset)
+          - Download `Comolib.zip` for portable version (GitHub asset)
+
           ### Auto-Update
-          Pomocore will automatically check for updates and notify you when a new version is available.
+          Comolib will automatically check for updates and notify you when a new version is available.
           
           ### Changes
           - Bug fixes and improvements
@@ -286,38 +287,38 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pomocore.dmg
-        asset_name: Pomocore.dmg
+        asset_path: ./Co-molib.dmg
+        asset_name: Co-molib.dmg
         asset_content_type: application/octet-stream
-        
+
     - name: Upload ZIP
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pomocore.zip
-        asset_name: Pomocore.zip
+        asset_path: ./Comolib.zip
+        asset_name: Comolib.zip
         asset_content_type: application/zip
-        
+
     - name: Upload DMG checksum
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pomocore.dmg.sha256
-        asset_name: Pomocore.dmg.sha256
+        asset_path: ./Co-molib.dmg.sha256
+        asset_name: Co-molib.dmg.sha256
         asset_content_type: text/plain
-        
+
     - name: Upload ZIP checksum
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Pomocore.zip.sha256
-        asset_name: Pomocore.zip.sha256
+        asset_path: ./Comolib.zip.sha256
+        asset_name: Comolib.zip.sha256
         asset_content_type: text/plain
         
     - name: Upload appcast.xml

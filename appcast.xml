@@ -7,7 +7,7 @@
             <title>Version 1.2.67</title>
             <pubDate>Thu, 02 Oct 2025 13:47:52 GMT</pubDate>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:minimumAutoupdateVersion>1259</sparkle:minimumAutoupdateVersion>
+            <sparkle:criticalUpdate sparkle:version="1268"/>
             <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/release-notes/1.2.67.html</sparkle:releaseNotesLink>
             <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.2.67/Pomocore.zip"
                       sparkle:version="1267"
