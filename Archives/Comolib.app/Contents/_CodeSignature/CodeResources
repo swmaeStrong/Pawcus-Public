@@ -18,7 +18,7 @@
 		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		rXHG+IVIlUJ46bBZuRpo3UwycnA=
+		6t/gaybjvvxySjNNgeQC7vha2Rk=
 		</data>
 		<key>Resources/BarGraph.json</key>
 		<data>
@@ -44,6 +44,10 @@
 		<data>
 		dwlZ1QPCLf+niaMNjpN5PlDG3Vk=
 		</data>
+		<key>Resources/Localizable.xcstrings.disabled</key>
+		<data>
+		EEtvot1Cj9G+rFs4Fa/5Jdquq5w=
+		</data>
 		<key>Resources/Pomocore-Info-Debug.plist</key>
 		<data>
 		3ttbEnrtr6xvsz8YzvAdRTdGJhw=
@@ -64,20 +68,20 @@
 		<data>
 		hA5LT6sIsCDUByB8BVLnJiv0fHM=
 		</data>
-		<key>Resources/en.lproj/Localizable.xcstrings.strings</key>
+		<key>Resources/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			5HdN8ZCYTYaMdVyBLrYilr7XwDk=
+			pGA/v2vR2AxcDzorUFkge7I38fI=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/ko.lproj/Localizable.xcstrings.strings</key>
+		<key>Resources/ko.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			xRpiJIOOHuD8pNNPlLqL3bMnPFQ=
+			rQIBJLHMogOU0yZHCzwM9anqXd8=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -136,7 +140,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			EjRvujt1xZQ26N+KxjJHbPZRnc4=
+			7cnAa4RXmIspGFt9cy810KvNRfs=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.data" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -145,7 +149,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			0czdT7I6ScT2iMeRtGQogBds77s=
+			sKfvI61tTg4Tfvb22WoOeUC0I50=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.domain" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -163,7 +167,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			Ga9ssQ0zBf2/kpwUH4RsSpgSukc=
+			KxZLqDvqRflpjv3PbK5XdD/z8Mw=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.infrastructure" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -211,7 +215,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			bW0JviBjE9nAxBLwkQgjUlaCADI9ATMQ0n+tXDT4rDg=
+			OksF9OmgPNB+gjIlaOnAAVdA9joYi0ME29C79Fd6D3I=
 			</data>
 		</dict>
 		<key>Resources/BarGraph.json</key>
@@ -256,6 +260,13 @@
 			hlO2jLCGnQEk1v4B1uupZskXPJxbCp6AvVrVPDsyNPc=
 			</data>
 		</dict>
+		<key>Resources/Localizable.xcstrings.disabled</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			T+mSvyX1FvvpcKUvgnx9rxvVhFxxatI5JUecb9cATMw=
+			</data>
+		</dict>
 		<key>Resources/Pomocore-Info-Debug.plist</key>
 		<dict>
 			<key>hash2</key>
@@ -291,20 +302,20 @@
 			pCxS92jyv7hUbTblP9L/R+Tyr+umnGg/1CO/Zsv4iH0=
 			</data>
 		</dict>
-		<key>Resources/en.lproj/Localizable.xcstrings.strings</key>
+		<key>Resources/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			kkEcpEOe+MTOjGsCLdeEaMgM0fi0HwmUQZ+0J4ikxpU=
+			l0RPiNkqjUn4ur4bOk5J6J2WFXSHBi8p+NilZshZuoU=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>Resources/ko.lproj/Localizable.xcstrings.strings</key>
+		<key>Resources/ko.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			En64ASO3cW0LO3CsZQbAYdz3WM4GFghAoc88gkx6aJY=
+			MO5B3glYpz7YUAWzzcNJ2GbFykYNhGjN30q6TLgxiJQ=
 			</data>
 			<key>optional</key>
 			<true/>
