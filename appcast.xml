@@ -4,15 +4,15 @@
         <title>Pomocore</title>
         <language>en</language>
         <item>
-            <title>Version 1.2.76</title>
-            <pubDate>Sun, 02 Nov 2025 03:48:06 GMT</pubDate>
+            <title>Version 1.2.77</title>
+            <pubDate>Tue, 04 Nov 2025 07:42:58 GMT</pubDate>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:criticalUpdate sparkle:version="1276"/>
-            <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/release-notes/1.2.76.html</sparkle:releaseNotesLink>
-            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.2.76/Comolib.zip"
-                      sparkle:version="1276"
-                      sparkle:shortVersionString="1.2.76"
-                      length="11766905"
+            <sparkle:criticalUpdate sparkle:version="1277"/>
+            <sparkle:releaseNotesLink>https://swmaeStrong.github.io/Pawcus-Public/release-notes/1.2.77.html</sparkle:releaseNotesLink>
+            <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.2.77/Comolib.zip"
+                      sparkle:version="1277"
+                      sparkle:shortVersionString="1.2.77"
+                      length="12072057"
                       type="application/octet-stream" />
         </item>
     </channel>
