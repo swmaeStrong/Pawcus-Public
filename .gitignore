@@ -17,3 +17,7 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# CreateML models
+Archives/**/CategoryML.mlmodelc/
+*.mlmodelc/
