@@ -17,7 +17,7 @@
 	<key>CFBundleName</key>
 	<string>Comolib</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.79</string>
+	<string>1.2.81</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1279</string>
+	<string>1281</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>

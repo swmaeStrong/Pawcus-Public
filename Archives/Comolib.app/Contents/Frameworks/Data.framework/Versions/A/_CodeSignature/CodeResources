@@ -4,18 +4,51 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>Resources/CategoryML.mlmodelc/analytics/coremldata.bin</key>
+		<data>
+		ZUOi+bHCiUVDVmwoVJPaY9aZGTA=
+		</data>
+		<key>Resources/CategoryML.mlmodelc/coremldata.bin</key>
+		<data>
+		vaVPTpAOESxOY0zEHBj6AA+9Oco=
+		</data>
+		<key>Resources/CategoryML.mlmodelc/metadata.json</key>
+		<data>
+		lQ6cwi3W1Peop9mkqa5Yp41qPfY=
+		</data>
 		<key>Resources/Info.plist</key>
 		<data>
-		VTxaiQzC8wSXppKy0NE+Gmb9vI0=
+		JaC2MKMYp88RlXdCUW159tx/SiY=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Resources/CategoryML.mlmodelc/analytics/coremldata.bin</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			gj3vk2jGUZoYJB+9XWg+1GDR+teVqMI1PhVINt0k8gI=
+			</data>
+		</dict>
+		<key>Resources/CategoryML.mlmodelc/coremldata.bin</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			w1A3VACTmKD+UWf+oJ6psgftjjrZX/QJS0XjJ1XJt3M=
+			</data>
+		</dict>
+		<key>Resources/CategoryML.mlmodelc/metadata.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			UXY4rrfSfvoNmugNC9/DAC/hm8j15Pg06Z5dR4F9Ia0=
+			</data>
+		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			NZiYfXeOr9tFcRaLD04/DH7rR+Spk0OOvJSOWjGIPLY=
+			Oul2CwG+R3m2EYFPobq4d7G9aPafCwgDIHJgTbDwzeU=
 			</data>
 		</dict>
 	</dict>

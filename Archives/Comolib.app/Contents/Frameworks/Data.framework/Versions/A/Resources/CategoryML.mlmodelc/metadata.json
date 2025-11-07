@@ -1,0 +1,75 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "outputSchema" : [
+      {
+        "isOptional" : "0",
+        "formattedType" : "String",
+        "type" : "String",
+        "name" : "label",
+        "shortDescription" : "Text label"
+      }
+    ],
+    "modelParameters" : [
+
+    ],
+    "author" : "김정원",
+    "specificationVersion" : 3,
+    "isUpdatable" : "0",
+    "stateSchema" : [
+
+    ],
+    "availability" : {
+      "macOS" : "10.14",
+      "tvOS" : "12.0",
+      "visionOS" : "1.0",
+      "watchOS" : "5.0",
+      "iOS" : "12.0",
+      "macCatalyst" : "12.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_textClassifier"
+    },
+    "inputSchema" : [
+      {
+        "isOptional" : "0",
+        "formattedType" : "String",
+        "type" : "String",
+        "name" : "text",
+        "shortDescription" : "Input text"
+      }
+    ],
+    "classLabels" : [
+      "Education",
+      "Browsing",
+      "E-commerce & Shopping",
+      "Entertainment",
+      "Development",
+      "Documentation",
+      "Meetings",
+      "File Management",
+      "Productivity",
+      "Marketing",
+      "SNS",
+      "Communication",
+      "Uncategorized",
+      "LLM",
+      "Design",
+      "System & Utilities",
+      "Finance",
+      "Video Editing",
+      "Game",
+      "AFK"
+    ],
+    "generatedClassName" : "CategoryML",
+    "userDefinedMetadata" : {
+      "com.apple.createml.training.finished" : "2025-11-06T18:33:22Z",
+      "com.apple.createml.app.tag" : "175.6",
+      "com.apple.createml.model.created" : "2025-11-06T18:33:22Z",
+      "com.apple.coreml.model.preview.type" : "textClassifier",
+      "com.apple.createml.app.version" : "6.2",
+      "com.apple.createml.training.started" : "2025-11-06T18:33:14Z"
+    },
+    "method" : "predict"
+  }
+]

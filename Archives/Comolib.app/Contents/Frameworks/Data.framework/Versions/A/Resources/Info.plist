@@ -40,6 +40,8 @@
 	<string>2601</string>
 	<key>DTXcodeBuild</key>
 	<string>17A400</string>
+	<key>LSBundleContainsCoreMLmlmodelc</key>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>NSHumanReadableCopyright</key>
