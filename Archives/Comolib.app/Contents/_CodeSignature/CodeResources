@@ -140,7 +140,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			3iKe3w4u8qks5MWqputiio0aKA4=
+			ZekiN9DUhMDo+49lAMqjx3c2MCc=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.data" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -149,7 +149,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			ZbYH2KDFtLj7Auo9FdB9E9169JM=
+			FdrNbWL69Gi5bea0Dc9GXkHdY8Y=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.domain" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -167,7 +167,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			BLrBXyjiF54dCy7tR1WshB8x6IY=
+			FM7yX4OCTx30DCBt1afXTU6lES8=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.infrastructure" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
