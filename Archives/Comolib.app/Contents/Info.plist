@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BuildMachineOSBuild</key>
-	<string>25A362</string>
+	<string>25A354</string>
 	<key>CFBundleDisplayName</key>
 	<string>Comolib</string>
 	<key>CFBundleExecutable</key>
@@ -17,7 +17,7 @@
 	<key>CFBundleName</key>
 	<string>Comolib</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.83</string>
+	<string>1.2.84</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1283</string>
+	<string>1284</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
