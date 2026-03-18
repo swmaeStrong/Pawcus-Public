@@ -18,9 +18,7 @@ build/
 *.tmp
 *.temp
 
-# CreateML models
-Archives/**/CategoryML.mlmodelc/
-*.mlmodelc/
+
 # Claude Code
 .claude/
 **/.claude/
