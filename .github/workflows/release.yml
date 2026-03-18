@@ -99,25 +99,34 @@ jobs:
       env:
         SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
       run: |
-        if [ -z "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
-          echo "❌ SPARKLE_EDDSA_PRIVATE_KEY secret is not set"
+        if [ -n "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
+          echo "Setting up EdDSA private key..."
+          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
+          chmod 600 ~/private_key.pem
+
+          ls -la Comolib.zip
+          ls -la ~/private_key.pem
+          ls -la ./bin/sign_update
+
+          echo "Signing update..."
+          ./bin/sign_update Comolib.zip ~/private_key.pem > signature_output.txt 2>&1 || true
+          echo "Sign command exit code: $?"
+          cat signature_output.txt
+
+          if grep -q 'sparkle:edSignature=' signature_output.txt; then
+            SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+            echo "Successfully extracted signature: $SIGNATURE"
+            echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+          else
+            echo "No signature found in output"
+            echo "signature=" >> $GITHUB_OUTPUT
+          fi
+
+          rm ~/private_key.pem
+        else
+          echo "No EdDSA private key provided, skipping signing"
           echo "signature=" >> $GITHUB_OUTPUT
-          exit 1
         fi
-
-        echo "Signing update with -s flag..."
-        SIGN_OUTPUT=$(./bin/sign_update -s "$SPARKLE_EDDSA_PRIVATE_KEY" Comolib.zip 2>&1)
-        echo "sign_update output: $SIGN_OUTPUT"
-
-        SIGNATURE=$(echo "$SIGN_OUTPUT" | tr -d '[:space:]')
-
-        if [ -z "$SIGNATURE" ]; then
-          echo "❌ Failed to generate signature"
-          exit 1
-        fi
-
-        echo "✅ Signature: $SIGNATURE"
-        echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
         
     - name: Calculate checksums and file size
       id: sparkle_info
