@@ -12,6 +12,7 @@
             <enclosure url="https://github.com/swmaeStrong/Pawcus-Public/releases/download/v1.2.90/Comolib.zip"
                       sparkle:version="1290"
                       sparkle:shortVersionString="1.2.90"
+                      sparkle:edSignature="cjrUdr1oc6znErSMG9z6YkwFsi+zas6g9v9E3i7e7FvfLeG9UVka3dJPKunA26EHBtk+TWIjiZhFijHSkHX+Cw=="
                       length="10579812"
                       type="application/octet-stream" />
         </item>
