@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>BuildMachineOSBuild</key>
-	<string>25A362</string>
+	<string>25D125</string>
 	<key>CFBundleDisplayName</key>
 	<string>Comolib</string>
 	<key>CFBundleExecutable</key>
@@ -17,7 +17,7 @@
 	<key>CFBundleName</key>
 	<string>Comolib</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.83</string>
+	<string>1.2.85</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -34,23 +34,23 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1283</string>
+	<string>1285</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
-	<string>25A352</string>
+	<string>25C57</string>
 	<key>DTPlatformName</key>
 	<string>macosx</string>
 	<key>DTPlatformVersion</key>
-	<string>26.0</string>
+	<string>26.2</string>
 	<key>DTSDKBuild</key>
-	<string>25A352</string>
+	<string>25C57</string>
 	<key>DTSDKName</key>
-	<string>macosx26.0</string>
+	<string>macosx26.2</string>
 	<key>DTXcode</key>
-	<string>2601</string>
+	<string>2620</string>
 	<key>DTXcodeBuild</key>
-	<string>17A400</string>
+	<string>17C52</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>NSAccentColorName</key>

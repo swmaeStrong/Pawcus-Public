@@ -4,51 +4,84 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/CategoryML.mlmodelc/analytics/coremldata.bin</key>
+		<key>Resources/Appname.mlmodelc/analytics/coremldata.bin</key>
 		<data>
-		ZUOi+bHCiUVDVmwoVJPaY9aZGTA=
+		NA09t7OVg9dCy1D7IYh053rDV5Y=
 		</data>
-		<key>Resources/CategoryML.mlmodelc/coremldata.bin</key>
+		<key>Resources/Appname.mlmodelc/coremldata.bin</key>
 		<data>
-		IcZLumBynKDArCGdNxh8QfWdDHY=
+		ftXhHjgXiKdtHdvL/6vv4B7e1MQ=
 		</data>
-		<key>Resources/CategoryML.mlmodelc/metadata.json</key>
+		<key>Resources/Appname.mlmodelc/metadata.json</key>
 		<data>
-		lQ6cwi3W1Peop9mkqa5Yp41qPfY=
+		+QN2+e78xz+o2x0asiV9d9OSVPI=
+		</data>
+		<key>Resources/Domain.mlmodelc/analytics/coremldata.bin</key>
+		<data>
+		jjlIhY/i9P79lDebeVvqRn/ecmk=
+		</data>
+		<key>Resources/Domain.mlmodelc/coremldata.bin</key>
+		<data>
+		3QtldRtRFd/ABdwA3nGDKzfC6wI=
+		</data>
+		<key>Resources/Domain.mlmodelc/metadata.json</key>
+		<data>
+		+nN+HvgRPEjRRw4QgtWef1GmA7Q=
 		</data>
 		<key>Resources/Info.plist</key>
 		<data>
-		JaC2MKMYp88RlXdCUW159tx/SiY=
+		GHskuITt/gOUY259gP0noLtW6eI=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Resources/CategoryML.mlmodelc/analytics/coremldata.bin</key>
+		<key>Resources/Appname.mlmodelc/analytics/coremldata.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			gj3vk2jGUZoYJB+9XWg+1GDR+teVqMI1PhVINt0k8gI=
+			sj6AzZDZXVucEZmtYqWn4H5EDVWJz3TX+EAXgoLI/iU=
 			</data>
 		</dict>
-		<key>Resources/CategoryML.mlmodelc/coremldata.bin</key>
+		<key>Resources/Appname.mlmodelc/coremldata.bin</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+fSydoAjBwCFLwpHDaWi/NsHJCq6NvU3XJMwLM1VB7Q=
+			9fXIZckwLLfOmhTNjLOgBWpuqY9Fnr6SXNJm/f/xhog=
 			</data>
 		</dict>
-		<key>Resources/CategoryML.mlmodelc/metadata.json</key>
+		<key>Resources/Appname.mlmodelc/metadata.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			UXY4rrfSfvoNmugNC9/DAC/hm8j15Pg06Z5dR4F9Ia0=
+			M7f+ECxzHZRYze8aWJjV5cujJazJdGcnH3uAkDCE5vg=
+			</data>
+		</dict>
+		<key>Resources/Domain.mlmodelc/analytics/coremldata.bin</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			hUFAb7WBbR53J1evX/jsVLxwt//wQuBZI+rzn+63tMQ=
+			</data>
+		</dict>
+		<key>Resources/Domain.mlmodelc/coremldata.bin</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			5auiP0xY5v+mLeNl5qeWjQ/KSJAmoHvqMaBYkjZWtXY=
+			</data>
+		</dict>
+		<key>Resources/Domain.mlmodelc/metadata.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			9w36BeDWpU23JfXJI7JzxF3YI1WbElUsRtHr2LaZRx8=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Oul2CwG+R3m2EYFPobq4d7G9aPafCwgDIHJgTbDwzeU=
+			zfjDm/voK4nyiNi7PF1p4aCRdE45EHjYKyIIIMo7O/8=
 			</data>
 		</dict>
 	</dict>
