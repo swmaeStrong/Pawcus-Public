@@ -16,8 +16,10 @@
 	<string>pawcus.dev</string>
 	<key>CFBundleName</key>
 	<string>Comolib</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.87</string>
+	<string>1.2.88</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>MacOSX</string>
@@ -34,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1287</string>
+	<string>1288</string>
 	<key>DTCompiler</key>
 	<string>com.apple.compilers.llvm.clang.1_0</string>
 	<key>DTPlatformBuild</key>
@@ -70,6 +72,8 @@
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://swmaestrong.github.io/Pawcus-Public/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>XYqUVZF83dzRohHy5RGDM0wYkGdJlKVqvsikWBAKAmk=</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>7200</integer>
 	<key>SparkleMinimumAutoupdateVersion</key>
