@@ -59,14 +59,8 @@ jobs:
     
     - name: Create ZIP from pre-built app
       run: |
-        mkdir -p ./Export
         APP_PATH=$(find ./Archives -name "*.app" -type d | head -n 1)
-        APP_NAME=$(basename "$APP_PATH")
-        cp -R "$APP_PATH" ./Export/
-
-        cd ./Export
-        ditto -c -k --sequesterRsrc --keepParent "$APP_NAME" ../Comolib.zip
-        cd ..
+        ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" Comolib.zip
                    
     - name: Install create-dmg
       run: brew install create-dmg
