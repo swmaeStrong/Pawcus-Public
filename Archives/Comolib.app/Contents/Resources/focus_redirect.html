@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Time</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #5fa3d9 0%, #3f72af 50%, #7ab8e8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background-image: url('character_dancing.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .motivation {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .tips {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        
+        .tips h3 {
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .tips li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tips li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        @keyframes dance {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            50% { transform: scale(1) rotate(0deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        .icon {
+            animation: dance 3s ease-in-out infinite;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon"></div>
+        <h1>Website Blocked</h1>
+        <p>This website is on your blocked list.<br>Stay focused and keep up the great work!</p>
+        
+        <div class="motivation">
+            "Success comes from focus. Concentrate on this moment."
+        </div>
+        
+        <div class="tips">
+            <h3>💡 Focus Tips</h3>
+            <ul>
+                <li>Take three deep breaths</li>
+                <li>Review your current task</li>
+                <li>Start with just 5 minutes of focus</li>
+                <li>Put your phone away</li>
+                <li>Clean your workspace</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Random motivational messages
+        const motivations = [
+            "Success comes from focus. Concentrate on this moment.",
+            "Focus is like a muscle. The more you practice, the stronger it gets.",
+            "One thing at a time. Focus on the present moment.",
+            "Remove distractions to see what really matters.",
+            "Time spent focusing is time spent growing."
+        ];
+        
+        const randomMotivation = motivations[Math.floor(Math.random() * motivations.length)];
+        document.querySelector('.motivation').textContent = randomMotivation;
+    </script>
+</body>
+</html>

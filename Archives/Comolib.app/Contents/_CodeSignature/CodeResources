@@ -73,6 +73,10 @@
 			<key>optional</key>
 			<true/>
 		</dict>
+		<key>Resources/focus_redirect.html</key>
+		<data>
+		DsYaDxXtgkODqf3QKWsGumBFtyw=
+		</data>
 		<key>Resources/ko.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
@@ -128,7 +132,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			vIPGEAKQb4R+5ksD1b1N2LmxLcE=
+			jIWRdfpqVZfg16QyOOt6iBodO1k=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.data" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -137,7 +141,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			AGUiNL+NjuEpB5dfHh5Lw59OVu0=
+			LzNoRUxcQorInb9+SHh3JpuPLaY=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.domain" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -164,7 +168,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			WGX1H0I6OS3IxtvdPJvR7+BLJ00=
+			FhwotjaDF/u8t3P1WQu3zJq0OX8=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "pawcus.dev.infrastructure" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = U6NUHA5DNR)</string>
@@ -300,6 +304,13 @@
 			</data>
 			<key>optional</key>
 			<true/>
+		</dict>
+		<key>Resources/focus_redirect.html</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			2CuMhPSaq7mgZ4K3S9jU+jUp/UZjbeBkgJGeuzbERjo=
+			</data>
 		</dict>
 		<key>Resources/ko.lproj/Localizable.strings</key>
 		<dict>
