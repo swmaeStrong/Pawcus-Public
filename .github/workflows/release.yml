@@ -105,37 +105,25 @@ jobs:
       env:
         SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
       run: |
-        if [ -n "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
-          echo "Setting up EdDSA private key..."
-          echo "$SPARKLE_EDDSA_PRIVATE_KEY" > ~/private_key.pem
-          chmod 600 ~/private_key.pem
-
-          # Debug: Check if files exist
-          ls -la Comolib.zip
-          ls -la ~/private_key.pem
-          ls -la ./bin/sign_update
-
-          # Sign the update
-          echo "Signing update..."
-          ./bin/sign_update Comolib.zip ~/private_key.pem > signature_output.txt 2>&1 || true
-          echo "Sign command exit code: $?"
-          cat signature_output.txt
-          
-          # Extract signature more carefully
-          if grep -q 'sparkle:edSignature=' signature_output.txt; then
-            SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
-            echo "Successfully extracted signature: $SIGNATURE"
-            echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
-          else
-            echo "No signature found in output"
-            echo "signature=" >> $GITHUB_OUTPUT
-          fi
-          
-          # Clean up
-          rm ~/private_key.pem
-        else
-          echo "No EdDSA private key provided, skipping signing"
+        if [ -z "$SPARKLE_EDDSA_PRIVATE_KEY" ]; then
+          echo "❌ SPARKLE_EDDSA_PRIVATE_KEY secret is not set"
           echo "signature=" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+        echo "Signing update with -s flag..."
+        ./bin/sign_update -s "$SPARKLE_EDDSA_PRIVATE_KEY" Comolib.zip > signature_output.txt 2>&1
+        echo "Sign command exit code: $?"
+        cat signature_output.txt
+
+        if grep -q 'sparkle:edSignature=' signature_output.txt; then
+          SIGNATURE=$(grep 'sparkle:edSignature=' signature_output.txt | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+          echo "✅ Successfully extracted signature: $SIGNATURE"
+          echo "signature=$SIGNATURE" >> $GITHUB_OUTPUT
+        else
+          echo "❌ No signature found in output"
+          echo "signature=" >> $GITHUB_OUTPUT
+          exit 1
         fi
         
     - name: Calculate checksums and file size
